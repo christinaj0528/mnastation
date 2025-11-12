@@ -1,1 +1,245 @@
-<link rel="stylesheet" href="main.css">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MNA Station &mdash; Modern Analytics for Ambitious Teams</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <header class="site-header" aria-label="Primary">
+      <div class="container header-inner">
+        <a class="brand" href="#home">MNA Station</a>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
+        <nav id="primary-navigation" class="primary-navigation" aria-label="Primary Navigation">
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#cta">Get Started</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Data-driven growth for modern teams</p>
+            <h1>Bring clarity to your metrics with a single, unified station.</h1>
+            <p class="lead">
+              MNA Station helps product and marketing leaders unify their analytics,
+              automate reporting, and share actionable insights in minutes instead of weeks.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#cta">Start free trial</a>
+              <a class="button ghost" href="#features">See how it works</a>
+            </div>
+            <div class="social-proof">
+              <div class="avatars" aria-hidden="true">
+                <span class="avatar avatar-1"></span>
+                <span class="avatar avatar-2"></span>
+                <span class="avatar avatar-3"></span>
+              </div>
+              <p>
+                Trusted by over <strong>4,500</strong> teams worldwide to uncover actionable insights.
+              </p>
+            </div>
+          </div>
+          <div class="hero-media" role="presentation">
+            <div class="dashboard">
+              <div class="dashboard-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="dashboard-body">
+                <div class="chart">
+                  <div class="chart-bar" style="--value: 85" data-value="85%"></div>
+                  <div class="chart-bar" style="--value: 55" data-value="55%"></div>
+                  <div class="chart-bar" style="--value: 70" data-value="70%"></div>
+                  <div class="chart-bar" style="--value: 95" data-value="95%"></div>
+                </div>
+                <div class="chart-caption">
+                  Weekly growth insights increased by <strong>42%</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="section features">
+        <div class="container">
+          <header class="section-header">
+            <p class="eyebrow">Why teams switch</p>
+            <h2>Built to orchestrate and accelerate your analytics workflow.</h2>
+          </header>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <div class="feature-icon">📊</div>
+              <h3>Unified dashboards</h3>
+              <p>
+                Combine product, marketing, and revenue data with real-time dashboards
+                that adapt to every stakeholder.
+              </p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon">🤖</div>
+              <h3>Automated insights</h3>
+              <p>
+                Our AI assistant highlights anomalies, predicts churn, and alerts your team
+                before issues become blockers.
+              </p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon">🔐</div>
+              <h3>Enterprise security</h3>
+              <p>
+                SOC 2 Type II compliance, granular permissions, and regional data residency
+                keep your organization compliant.
+              </p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon">⚡</div>
+              <h3>Frictionless setup</h3>
+              <p>
+                Connect your data warehouse, favorite tools, and start shipping dashboards
+                in under 10 minutes with our guided onboarding.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="section about">
+        <div class="container about-grid">
+          <div>
+            <h2>Meet the station powering high-growth teams.</h2>
+            <p>
+              From fast-scaling startups to global enterprises, MNA Station brings every
+              teammate the context they need to take decisive action. Customize your workspace,
+              set goals, and monitor performance without wrestling spreadsheets.
+            </p>
+          </div>
+          <ul class="about-stats" aria-label="Company milestones">
+            <li>
+              <span class="stat">$68M</span>
+              <span class="label">Revenue influenced</span>
+            </li>
+            <li>
+              <span class="stat">28+</span>
+              <span class="label">Integrations supported</span>
+            </li>
+            <li>
+              <span class="stat">99.99%</span>
+              <span class="label">Platform uptime</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="testimonials" class="section testimonials">
+        <div class="container">
+          <header class="section-header">
+            <p class="eyebrow">Loved by product and revenue teams</p>
+            <h2>What our customers say</h2>
+          </header>
+          <div class="testimonial-grid">
+            <figure class="testimonial-card">
+              <blockquote>
+                “MNA Station helps us align every team member on the metrics that matter.
+                We ship faster because decisions are no longer stuck in spreadsheets.”
+              </blockquote>
+              <figcaption>
+                <span class="name">Jordan Lee</span>
+                <span class="title">VP of Product, Lunar Labs</span>
+              </figcaption>
+            </figure>
+            <figure class="testimonial-card">
+              <blockquote>
+                “The automated anomaly detection caught a revenue dip before it reached our
+                leadership meeting. It’s like having a data scientist in every conversation.”
+              </blockquote>
+              <figcaption>
+                <span class="name">Samira Patel</span>
+                <span class="title">Growth Lead, Northwind</span>
+              </figcaption>
+            </figure>
+            <figure class="testimonial-card">
+              <blockquote>
+                “We consolidated six different tools into one platform. Onboarding took less
+                than an afternoon, and our exec team is obsessed with the insights.”
+              </blockquote>
+              <figcaption>
+                <span class="name">Luis Romero</span>
+                <span class="title">COO, Velocity</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section id="cta" class="section cta">
+        <div class="container cta-inner">
+          <div>
+            <h2>Ready to explore MNA Station?</h2>
+            <p>
+              Launch your workspace in minutes and give your team a central hub for data-driven decisions.
+            </p>
+          </div>
+          <a class="button secondary" href="mailto:hello@mnastation.com">Book a demo</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <a class="brand" href="#home">MNA Station</a>
+        <nav aria-label="Footer">
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#cta">Pricing</a></li>
+          </ul>
+        </nav>
+        <p class="footer-note">© <span id="year"></span> MNA Station. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      const navToggle = document.querySelector('.nav-toggle');
+      const navigation = document.querySelector('#primary-navigation');
+
+      if (navToggle && navigation) {
+        navToggle.addEventListener('click', () => {
+          const expanded = navToggle.getAttribute('aria-expanded') === 'true';
+          navToggle.setAttribute('aria-expanded', String(!expanded));
+          navigation.classList.toggle('open');
+        });
+
+        navigation.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            navToggle.setAttribute('aria-expanded', 'false');
+            navigation.classList.remove('open');
+          });
+        });
+      }
+
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
