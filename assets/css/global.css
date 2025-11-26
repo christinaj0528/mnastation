@@ -1,0 +1,131 @@
+/* ============================================
+   Global Styles - Reset, Variables, Base
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Colors */
+  --bg-primary: #333;
+  --bg-dark: rgba(20, 20, 20, 0.6);
+  --bg-menu: rgba(10, 10, 10, 0.92);
+  --bg-tabs: rgba(20, 20, 20, 0.95);
+  
+  --text-primary: #fff;
+  --text-muted: rgba(255, 255, 255, 0.85);
+  --text-secondary: rgba(255, 255, 255, 0.88);
+  --text-nav: #bbb;
+  --text-nav-active: #63c7ff;
+  --text-label: #8fd8ff;
+  
+  --accent-primary: #4db7ff;
+  --accent-dark: #1f6fe5;
+  --accent-text: #081627;
+  --accent-glow: rgba(77, 183, 255, 0.7);
+  --accent-bg: rgba(77, 183, 255, 0.18);
+  --accent-shadow: rgba(99, 199, 255, 0.6);
+  
+  --border-light: rgba(255, 255, 255, 0.1);
+  --border-menu: rgba(255, 255, 255, 0.08);
+  --border-btn: rgba(255, 255, 255, 0.2);
+  --border-hamburger: rgba(255, 255, 255, 0.25);
+  
+  /* Typography */
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  --font-size-base: 1rem;
+  --font-size-small: 0.9rem;
+  --font-size-xs: 0.75rem;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 18px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 32px;
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.7s ease;
+  
+  /* Z-index */
+  --z-tabs: 99;
+  --z-menu: 90;
+  --z-header: 100;
+  --z-nav: 50;
+  --z-highlight: 40;
+
+  /* ============================================
+     LAYOUT SETTINGS - 레이아웃 설정 (여기서 한 번에 수정)
+     ============================================ */
+
+  /* Header Settings */
+  --header-height: 72px;
+  --header-height-mobile: 60px;
+  --header-padding-x: 32px;
+  --header-padding-x-mobile: 16px;
+  --header-bg-opacity: 0.6;
+  --header-blur: 12px;
+
+  /* Body Settings */
+  --body-padding-top: 72px;
+  --body-padding-top-mobile: 60px;
+  --body-padding-bottom-mobile: 70px;
+
+  /* Section Settings */
+  --section-height: 100vh;
+  --content-max-width: 640px;
+  --bg-image-opacity: 0.32;
+
+  /* Navigation Settings */
+  --nav-left-position: 60px;
+  --nav-item-gap: 18px;
+  --highlight-width: 4px;
+  --highlight-height: 28px;
+
+  /* Typography Settings */
+  --title-font-size: 32px;
+  --title-font-size-mobile: 26px;
+  --desc-font-size: 14px;
+  --brand-letter-spacing: 0.18em;
+  --brand-font-weight: 600;
+
+  /* Menu Panel Settings */
+  --menu-panel-width: 360px;
+  --menu-panel-width-percent: 80vw;
+  --menu-panel-padding-top: 110px;
+  --menu-panel-blur: 18px;
+  --menu-panel-bg-opacity: 0.92;
+
+  /* Bottom Tabs Settings */
+  --bottom-tabs-height: 70px;
+  --bottom-tabs-padding: 8px;
+
+  /* Animation Settings */
+  --content-transform-y: 20px;
+  --content-transition-duration: 0.8s;
+  --highlight-transition-duration: 0.35s;
+}
+
+html,
+body {
+  font-family: var(--font-family);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Fullpage scroll only for index.html */
+html.fullpage,
+body.fullpage {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  padding-top: var(--body-padding-top);
+}

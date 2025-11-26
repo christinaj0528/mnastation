@@ -1,0 +1,769 @@
+<html lang="ko"><head>
+<meta charset="utf-8">
+<meta http-equiv="imagetoolbar" content="no">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<title>관리자메인 | M&A STATION</title>
+<link rel="stylesheet" href="https://macomaex.com/backoffice/css/admin.css?ver=2025.11.24-11:06:32">
+<link rel="stylesheet" href="https://macomaex.com/js/font-awesome/css/font-awesome.min.css?ver=2025.11.24-11:06:32">
+<!--[if lte IE 8]>
+<script src="https://macomaex.com/js/html5.js"></script>
+<![endif]-->
+<script>
+// 자바스크립트에서 사용하는 전역변수 선언
+var g5_url       = "https://macomaex.com";
+var g5_bbs_url   = "https://macomaex.com/bbs";
+var g5_is_member = "1";
+var g5_is_admin  = "super";
+var g5_is_mobile = "";
+var g5_bo_table  = "";
+var g5_sca       = "";
+var g5_editor    = "";
+var g5_cookie_domain = "";
+var g5_shop_url = "https://macomaex.com/shop";
+var g5_admin_url = "https://macomaex.com/backoffice";
+</script>
+<script src="https://macomaex.com/js/jquery-1.12.4.min.js?ver=2025.11.24-11:06:32"></script>
+<script src="https://macomaex.com/js/jquery-migrate-1.4.1.min.js?ver=2025.11.24-11:06:32"></script>
+<script src="https://macomaex.com/js/jquery.menu.js?ver=2025.11.24-11:06:32"></script>
+<script src="https://macomaex.com/js/common.js?ver=2025.11.24-11:06:32"></script>
+<script src="https://macomaex.com/js/wrest.js?ver=2025.11.24-11:06:32"></script>
+<script src="https://macomaex.com/js/placeholders.min.js?ver=2025.11.24-11:06:32"></script>
+<style type="text/css">/* Chart.js */
+@keyframes chartjs-render-animation{from{opacity:.99}to{opacity:1}}.chartjs-render-monitor{animation:chartjs-render-animation 1ms}.chartjs-size-monitor,.chartjs-size-monitor-expand,.chartjs-size-monitor-shrink{position:absolute;direction:ltr;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1}.chartjs-size-monitor-expand>div{position:absolute;width:1000000px;height:1000000px;left:0;top:0}.chartjs-size-monitor-shrink>div{position:absolute;width:200%;height:200%;left:0;top:0}</style><style id="monica-reading-highlight-style">
+        .monica-reading-highlight {
+          animation: fadeInOut 1.5s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+          0%, 100% { background-color: transparent; }
+          30%, 70% { background-color: rgba(2, 118, 255, 0.20); }
+        }
+      </style></head>
+<body class="nav-md" monica-id="ofpnmcalabcbjgholdjcjblkibolbppb" monica-version="7.9.8">
+
+<script>
+    var g5_admin_csrf_token_key = "6bc6c67b61426df5d7c84a7fd09eb3c5";
+    var tempX = 0;
+    var tempY = 0;
+
+    function imageview(id, w, h) {
+
+        menu(id);
+
+        var el_id = document.getElementById(id);
+
+        //submenu = eval(name+".style");
+        submenu = el_id.style;
+        submenu.left = tempX - (w + 11);
+        submenu.top = tempY - (h / 2);
+
+        selectBoxVisible();
+
+        if (el_id.style.display != 'none')
+            selectBoxHidden(id);
+    }
+</script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- Bootstrap -->
+    <link href="https://macomaex.com/backoffice/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="https://macomaex.com/backoffice/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="https://macomaex.com/backoffice/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- bootstrap-progressbar -->
+    <link href="https://macomaex.com/backoffice/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="https://macomaex.com/backoffice/build/css/custom.min.css" rel="stylesheet">
+	<!--link href="https://macomaex.com/backoffice/css/style.css" rel="stylesheet"-->
+	<link href="https://macomaex.com/backoffice/css/login.css" rel="stylesheet">
+
+
+
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view" style="height: 1225px;">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="https://macomaex.com/backoffice/" class="site_title"><i class="fa fa-cog" aria-hidden="true"></i> <span><img src="https://macomaex.com/backoffice/img/logo.png" alt="M&A STATION 관리자" title=""></span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            <div class="profile clearfix">
+              <div class="profile_pic">
+				<img src="https://macomaex.com/data/member_image/ad/admin.gif?1740358817" alt="profile_image" class="img-circle profile_img">              </div>
+              <div class="profile_info">
+                <span>환영합니다,</span>
+                <h2>최고관리자</h2>
+              </div>
+            </div>
+            <!-- /menu profile quick info -->
+
+            <br>
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <h3>메뉴</h3>
+                <ul class="nav side-menu">
+                              <li class="active"><a><i class="fa fa-home"></i> 기본관리 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu" style="display: block;">
+                      <li data-menu="100310" class=""><a href="/backoffice/newwinlist.php">팝업레이어관리</a></li><li data-menu="100550" class=""><a href="/backoffice/custom/seo_list.php">SEO 관리</a></li>                    </ul>
+                  </li>
+                              <li class=""><a><i class="fa fa-edit"></i> 회원 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu" style="display: none;">
+                      <li data-menu="200100" class=""><a href="/backoffice/admin_list.php">관리자관리</a></li><li data-menu="200110" class=""><a href="javascript:void(0);" onclick="loadPage('member_manage.html', '회원관리', event)">회원관리</a></li><li data-menu="200250" class=""><a href="/backoffice/selected_list.php">셀렉티드관리</a></li>                    </ul>
+                  </li>
+                              <li><a><i class="fa fa-comments-o"></i> 상담 신청 관리 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu" style="display: none;">
+                      <li data-menu="300100" class=""><a href="javascript:void(0);" onclick="loadPage('consultation_requests.html', '상담 신청 관리', event)">상담 신청 목록</a></li>                    </ul>
+                  </li>
+                              <li class=""><a><i class="fa fa-file-text-o"></i> 매도/매수 현황 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu" style="display: none;">
+                      <li data-menu="500100" class=""><a href="javascript:void(0);" onclick="loadPage('applications_manage.html?type=seller', '매도현황', event)">매도현황</a></li>
+                      <li data-menu="500200" class=""><a href="javascript:void(0);" onclick="loadPage('applications_manage.html?type=buyer', '매수현황', event)">매수현황</a></li>                    </ul>
+                  </li>
+                              <li><a href="/backoffice/bbs/board.php?bo_table=Banner"><i class="fa fa-picture-o"></i> 배너관리 </a>
+                    <ul class="nav child_menu">
+                                          </ul>
+                  </li>
+                              <li><a><i class="fa fa-lightbulb-o"></i> Insights 관리 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu" style="display: none;">
+                      <li data-menu="400100" class=""><a href="javascript:void(0);" onclick="loadPage('insights_cases.html', 'M&A 사례 관리', event)">M&A 사례 관리</a></li><li data-menu="400200" class=""><a href="javascript:void(0);" onclick="loadPage('insights_news.html', 'M&A 소식 관리', event)">M&A 소식 관리</a></li>                    </ul>
+                  </li>
+                              <li><a><i class="fa fa-question-circle"></i> Support 관리 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu" style="display: none;">
+                      <li data-menu="410100" class=""><a href="javascript:void(0);" onclick="loadPage('support_notice.html', '공지사항 관리', event)">공지사항 관리</a></li><li data-menu="410200" class=""><a href="javascript:void(0);" onclick="loadPage('support_faq.html', 'FAQ 관리', event)">FAQ 관리</a></li>                    </ul>
+                  </li>
+                              <li><a><i class="fa fa-credit-card"></i> 결제 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li data-menu="700100" class=""><a href="/backoffice/regular_payment.list.php">정기 결제 관리</a></li><li data-menu="700200" class=""><a href="/backoffice/payment.list.php">고객 결제 관리</a></li><li data-menu="700300" class=""><a href="/backoffice/payment.membership.list.php">멤버쉽 결제 히스토리</a></li><li data-menu="700400" class=""><a href="/backoffice/membership_list.php">맴버쉽관리</a></li>                    </ul>
+                  </li>
+                              <li><a><i class="fa fa-tag"></i> 쿠폰관리 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li data-menu="810100" class=""><a href="/backoffice/shop_admin/couponlist.php">쿠폰생성관리</a></li><li data-menu="810200" class=""><a href="/backoffice/shop_admin/couponloglist.php">쿠폰사용내역</a></li>                    </ul>
+                  </li>
+                              <li><a><i class="fa fa-commenting-o"></i> 알림톡 설정 <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li data-menu="990100" class=""><a href="/backoffice/gw_alimtalk_admin/nc_alimtalk_config.php">알림톡 설정</a></li>                    </ul>
+                  </li>
+                            </ul>
+              </div>
+
+            </div>
+            <!-- /sidebar menu -->
+
+            <!-- /menu footer buttons -->
+            <div class="sidebar-footer hidden-small">
+              <a data-toggle="tooltip" data-placement="top" title="" href="/" target="_blank" data-original-title="홈페이지 바로가기">
+				<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" data-original-title="" title="">
+                 
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="" href="https://macomaex.com/backoffice/admin_form.php?w=u&amp;mb_id=admin" data-original-title="Settings">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" title="" href="https://macomaex.com/bbs/logout.php" data-original-title="Logout">
+                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+              </a>
+            </div>
+            <!-- /menu footer buttons -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+              <nav class="nav navbar-nav">
+              <ul class=" navbar-right">
+                <li class="nav-item dropdown open" style="padding-left: 15px;">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
+                   최고관리자                  </a>
+                  <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="https://macomaex.com/backoffice/admin_form.php?w=u&amp;mb_id=admin"> 관리자정보</a>
+                    <a class="dropdown-item" href="https://macomaex.com/bbs/logout.php"><i class="fa fa-sign-out pull-right"></i> 로그아웃</a>
+                  </div>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+		<div class="right_col" role="main" style="min-height: 1594.8px;">
+          <!-- page content -->
+          <iframe id="contentFrame" style="width: 100%; height: calc(100vh - 100px); border: none; display: none; min-height: 800px;"></iframe>
+          <div id="defaultContent">
+<style>
+.btm_info{
+    background-color: #00b0bf;
+    color: #fff;
+    padding: 30px;
+    margin-top: 30px;
+    border-radius: 20px;
+    position: relative;
+}
+.btm_info dl dt {
+	font-size: 17px;
+	margin-bottom:20px;
+}
+.btm_info dl dd {
+   margin:0px;
+}
+.btm_info .tel dd a {
+    color: #fff;
+    font-size: 30px;
+    line-height: 1;
+}
+.btm_info .time dd {
+    font-size: 15px;
+    line-height: 1.5;
+	margin:0px;
+}
+.btm_info .counsel a {
+    width: 200px;
+    height: 100px;
+    background-color: #0a828d;
+    font-weight: bold;
+    font-size: 16px;
+    color: #fff !important;
+    text-align: center;
+    border-radius: 10px;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    text-shadow: 3px 3px 3px rgba(255,255,255,0.3);
+    box-shadow: 3px 3px 0 rgba(255,255,255,0.3);
+    transition: all .3s ease-out;
+}
+</style>
+
+
+          <div class="row">
+
+            <div class="col-md-6 col-sm-6 ">
+              <div class="x_panel tile fixed_height_500">
+                <div class="x_title">
+                  <h2>최근 일주일 방문 건수</h2>
+                  <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                  </ul>
+                  <div class="clearfix"></div>
+                </div>
+				<div class="x_content">
+                  <h4>( 2025-11-18 ~ 2025-11-24)</h4>
+					<canvas id="7Chart" style="height: 374px; width: 100%; display: block;" width="874" height="374"></canvas>
+				</div>
+              </div>
+            </div>
+
+<script>
+$(function(){
+	var ctx = document.getElementById("7Chart");
+	var mybarChart = new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: ['2025-11-24','2025-11-23','2025-11-22','2025-11-21','2025-11-20','2025-11-19','2025-11-18'],
+			datasets: [{
+				label: '방문수',
+				backgroundColor: "#26B99A",
+				data: [44,78,94,50,65,53,82]
+			}]
+		},
+		options: {
+			responsive: false,
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			}
+		}
+	});
+});
+</script>
+
+  <div class="col-md-6 col-sm-6 ">
+                <div class="x_panel fixed_height_500">
+                  <div class="x_title">
+                    <h2>기간별 현황</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+
+                  <div class="x_content">
+					<h4></h4>
+                    <div class="table-responsive">
+                      <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                          <tr class="headings">
+                            <th class="column-title">날짜 </th>
+                            <th class="column-title">방문수 </th>
+                            <th class="column-title">게시물 등록수 </th>
+                            
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <tr class="even pointer">
+                            <td class=" ">11.24 (오늘)</td>
+                            <td class=" ">44 건</td>
+                            <td class=" ">0 건</td>
+                            
+                          </tr>
+                          <tr class="odd pointer">
+                            <td class=" ">최근 7일 합계</td>
+                            <td class=" ">466 건</td>
+                            <td class=" ">0 건</td>
+                            
+                          </tr>
+                          <tr class="even pointer">
+                            <td class=" ">최근 7일 평균</td>
+                            <td class=" ">67 건</td>
+                            <td class=" ">0  건</td>
+                            
+                          </tr>
+                          <tr class="odd pointer">
+                            <td class=" ">최근 30일 합계</td>
+                            <td class=" ">3,533 건</td>
+                            <td class=" ">0 건</td>
+                            
+                          </tr>
+                          <tr class="even pointer">
+                            <td class=" ">최근30일 평균</td>
+                            <td class=" ">114 건</td>
+                            <td class=" ">0 건</td>
+                            
+                          </tr>
+                          <tr class="odd pointer">
+                            <td class=" ">전체</td>
+                            <td class=" ">67,248 건</td>
+                            <td class=" ">73 건</td>
+                            
+                          </tr>
+                          <tr class="even pointer">
+                            <td class=" ">전체 평균</td>
+                            <td class=" ">117 건</td>
+                            <td class=" ">15 건</td>
+                            
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+							
+						
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 col-sm-12 ">
+              <div class="btm_info">
+
+                <div class="row x_title">
+                  <div class="col-md-12">
+                    <h2>M&A STATION 고객센터 안내 <small>CUSTOMER CENTER</small></h2>
+                  </div>
+                </div>
+				
+				<div class="col-md-4 col-sm-4">
+						<dl class="tel">
+							<dt>문의전화</dt>
+							<dd><a href="tel:02-3478-0711"><strong>02-3478-0711</strong></a></dd>
+						</dl>
+				</div>
+				<div class="col-md-4 col-sm-4">
+						<dl class="time">
+							<dt>상담가능시간</dt>
+							<dd>평일 10:00 ~ 18:00 (점심 12:00 ~ 13:00)</dd>
+							<dd>주말 및 공휴일 휴무</dd>
+						</dl>
+				</div>
+				<div class="col-md-4 col-sm-4">
+						<div class="counsel pull-right">
+							<a href="mailto:info@prix.co.kr">유지보수 신청</a>
+						</div>
+                </div>
+
+                <div class="clearfix"></div>
+              </div>
+            </div>
+
+          </div>
+          </div>
+          </div>
+		</div>
+        <!-- /page content -->
+
+    </div>
+<noscript>
+    <p>
+        귀하께서 사용하시는 브라우저는 현재 <strong>자바스크립트를 사용하지 않음</strong>으로 설정되어 있습니다.<br>
+        <strong>자바스크립트를 사용하지 않음</strong>으로 설정하신 경우는 수정이나 삭제시 별도의 경고창이 나오지 않으므로 이점 주의하시기 바랍니다.
+    </p>
+</noscript>
+
+    <!-- Bootstrap -->
+    <script src="https://macomaex.com/backoffice/vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FastClick -->
+    <script src="https://macomaex.com/backoffice/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="https://macomaex.com/backoffice/vendors/nprogress/nprogress.js"></script>
+    <!-- Chart.js -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <!-- gauge.js -->
+    <script src="https://macomaex.com/backoffice/vendors/gauge.js/dist/gauge.min.js"></script>
+    <!-- bootstrap-progressbar -->
+    <script src="https://macomaex.com/backoffice/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+    <!-- iCheck -->
+    <script src="https://macomaex.com/backoffice/vendors/iCheck/icheck.min.js"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="https://macomaex.com/backoffice/build/js/custom.js"></script>
+    
+    <script>
+      function loadPage(url, title, evt) {
+        const contentFrame = document.getElementById('contentFrame');
+        const defaultContent = document.getElementById('defaultContent');
+        
+        // 기본 콘텐츠 숨기기
+        if (defaultContent) {
+          defaultContent.style.display = 'none';
+        }
+        
+        // iframe 표시 및 로드
+        contentFrame.style.display = 'block';
+        contentFrame.src = url;
+        contentFrame.title = title;
+        
+        // 메뉴 활성화 상태 업데이트
+        document.querySelectorAll('.nav.child_menu li').forEach(function(item) {
+          item.classList.remove('active');
+        });
+        if (evt && evt.target) {
+          const li = evt.target.closest('li');
+          if (li) li.classList.add('active');
+        }
+        
+        // 페이지 상단으로 스크롤
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      
+      // iframe 로드 완료 시 높이 조정
+      document.getElementById('contentFrame').addEventListener('load', function() {
+        try {
+          const iframe = this;
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          const iframeBody = iframeDoc.body;
+          const iframeHtml = iframeDoc.documentElement;
+          
+          // iframe 내용의 높이에 맞춰 조정
+          const height = Math.max(
+            iframeBody.scrollHeight,
+            iframeBody.offsetHeight,
+            iframeHtml.clientHeight,
+            iframeHtml.scrollHeight,
+            iframeHtml.offsetHeight
+          );
+          
+          iframe.style.height = (height + 100) + 'px';
+        } catch (e) {
+          // 크로스 오리진 문제가 있을 경우 기본 높이 유지
+          console.log('Iframe height adjustment skipped:', e);
+        }
+      });
+      
+      // 사이드 메뉴 토글 기능 (매도/매수 현황 메뉴 포함)
+      // custom.js가 로드된 후 실행되도록 window.onload 사용
+      $(window).on('load', function() {
+        // 약간의 지연을 두어 custom.js의 초기화가 완료되도록 함
+        setTimeout(function() {
+          // 메뉴가 닫히지 않도록 보호하는 변수 (각 메뉴 항목별로 관리)
+          var menuCloseTimeouts = {};
+          
+          // 사이드바 전체 영역에 마우스가 있을 때는 메뉴가 닫히지 않도록
+          $('.left_col').on('mouseenter', function() {
+            // 모든 닫기 타임아웃 취소
+            for (var key in menuCloseTimeouts) {
+              if (menuCloseTimeouts.hasOwnProperty(key)) {
+                clearTimeout(menuCloseTimeouts[key]);
+                delete menuCloseTimeouts[key];
+              }
+            }
+          });
+          
+          // 사이드 메뉴 항목(상위 메뉴 + 하위 메뉴 포함) 전체에 마우스가 있을 때
+          $('.side-menu > li').on('mouseenter', function() {
+            var menuId = $(this).index();
+            // 해당 메뉴의 닫기 타임아웃이 있으면 취소
+            if (menuCloseTimeouts[menuId]) {
+              clearTimeout(menuCloseTimeouts[menuId]);
+              delete menuCloseTimeouts[menuId];
+            }
+            // 메뉴가 열린 상태로 유지
+            $(this).addClass('active');
+            $(this).find('.child_menu').show();
+          });
+          
+          // 사이드 메뉴 항목에서 마우스가 벗어날 때 (하위 메뉴로 이동할 시간을 주기 위해 지연)
+          $('.side-menu > li').on('mouseleave', function(e) {
+            var $menuItem = $(this);
+            var menuId = $menuItem.index();
+            var clientX = e.clientX || 0;
+            var clientY = e.clientY || 0;
+            
+            // 약간의 지연을 두어 하위 메뉴로 마우스를 이동할 시간 제공
+            menuCloseTimeouts[menuId] = setTimeout(function() {
+              // 사이드바 영역에 마우스가 여전히 있는지 확인
+              try {
+                var $hoveredElement = $(document.elementFromPoint(clientX, clientY));
+                var isInSidebar = $hoveredElement.closest('.left_col').length > 0;
+                
+                if (!isInSidebar) {
+                  // 사이드바 영역 밖으로 완전히 나갔을 때만 닫기
+                  $menuItem.removeClass('active');
+                  $menuItem.find('.child_menu').slideUp(200);
+                  delete menuCloseTimeouts[menuId];
+                }
+              } catch(err) {
+                // elementFromPoint 실패 시 안전하게 처리
+                delete menuCloseTimeouts[menuId];
+              }
+            }, 300); // 300ms 지연으로 하위 메뉴로 이동할 시간 제공
+          });
+          
+          // 하위 메뉴 영역에 마우스가 들어갔을 때도 메뉴 유지
+          $('.child_menu').on('mouseenter', function() {
+            var $parentLi = $(this).closest('.side-menu > li');
+            var menuId = $parentLi.index();
+            // 닫기 타임아웃 취소
+            if (menuCloseTimeouts[menuId]) {
+              clearTimeout(menuCloseTimeouts[menuId]);
+              delete menuCloseTimeouts[menuId];
+            }
+            // 메뉴 유지
+            $parentLi.addClass('active');
+            $(this).show();
+          });
+          
+          // 하위 메뉴 항목 클릭 시 이벤트 전파 방지 (메뉴가 닫히지 않도록)
+          $('.child_menu li a').off('click.childMenu').on('click.childMenu', function(e) {
+            e.stopPropagation(); // 이벤트 버블링 방지
+            // 메뉴가 열린 상태로 유지
+            $(this).closest('.side-menu > li').addClass('active');
+            $(this).closest('.child_menu').show();
+          });
+          
+          // 상위 메뉴 클릭 시 토글 기능
+          $('.side-menu > li > a').off('click.menuToggle').on('click.menuToggle', function(e) {
+            // 하위 메뉴 항목을 클릭한 경우는 처리하지 않음
+            if ($(e.target).closest('.child_menu').length > 0) {
+              return;
+            }
+            
+            const $parentLi = $(this).parent('li');
+            const $childMenu = $parentLi.find('.child_menu');
+            
+            // 하위 메뉴가 있는 경우에만 처리
+            if ($childMenu.length > 0) {
+              e.preventDefault();
+              e.stopPropagation();
+              
+              const isDisplayed = $childMenu.is(':visible');
+              
+              // 모든 하위 메뉴 닫기
+              $('.child_menu').slideUp(200);
+              
+              // 모든 메뉴 항목에서 active 클래스 제거
+              $('.side-menu > li').removeClass('active');
+              
+              // 클릭한 메뉴 토글
+              if (!isDisplayed) {
+                $childMenu.slideDown(200);
+                $parentLi.addClass('active');
+              }
+            }
+          });
+        }, 100);
+      });
+    </script>
+
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            Copyright © M&A STATION. All rights reserved.
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    
+
+
+
+<script>
+    $(".scroll_top").click(function() {
+        $("body,html").animate({
+            scrollTop: 0
+        }, 400);
+    })
+</script>
+
+<!-- <p>실행시간 : 0.011347055435181 -->
+
+<script src="https://macomaex.com/backoffice/admin.js?ver=2025.11.24-11:06:32"></script>
+<script src="https://macomaex.com/js/jquery.anchorScroll.js?ver=2025.11.24-11:06:32"></script>
+<script>
+    $(function() {
+		//.main_container {height:10000px;}
+		//height=$("body").height();
+		//$(".main_container").height(height);
+        var admin_head_height = $("#hd_top").height() + $("#container_title").height() + 5;
+		$(".scroll-view").height($(document).height());
+
+        $("a[href^='#']").anchorScroll({
+            scrollSpeed: 0, // scroll speed
+            offsetTop: admin_head_height, // offset for fixed top bars (defaults to 0)
+            onScroll: function() {
+                // callback on scroll start
+            },
+            scrollEnd: function() {
+                // callback on scroll end
+            }
+        });
+
+        var hide_menu = false;
+        var mouse_event = false;
+        var oldX = oldY = 0;
+
+        $(document).mousemove(function(e) {
+            if (oldX == 0) {
+                oldX = e.pageX;
+                oldY = e.pageY;
+            }
+
+            if (oldX != e.pageX || oldY != e.pageY) {
+                mouse_event = true;
+            }
+        });
+
+        // 주메뉴
+        var $gnb = $(".gnb_1dli > a");
+        $gnb.mouseover(function() {
+            if (mouse_event) {
+                $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_over2 gnb_1dli_on");
+                $(this).parent().addClass("gnb_1dli_over gnb_1dli_on");
+                menu_rearrange($(this).parent());
+                hide_menu = false;
+            }
+        });
+
+        $gnb.mouseout(function() {
+            hide_menu = true;
+        });
+
+        $(".gnb_2dli").mouseover(function() {
+            hide_menu = false;
+        });
+
+        $(".gnb_2dli").mouseout(function() {
+            hide_menu = true;
+        });
+
+        $gnb.focusin(function() {
+            $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_over2 gnb_1dli_on");
+            $(this).parent().addClass("gnb_1dli_over gnb_1dli_on");
+            menu_rearrange($(this).parent());
+            hide_menu = false;
+        });
+
+        $gnb.focusout(function() {
+            hide_menu = true;
+        });
+
+        $(".gnb_2da").focusin(function() {
+            $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_over2 gnb_1dli_on");
+            var $gnb_li = $(this).closest(".gnb_1dli").addClass("gnb_1dli_over gnb_1dli_on");
+            menu_rearrange($(this).closest(".gnb_1dli"));
+            hide_menu = false;
+        });
+
+        $(".gnb_2da").focusout(function() {
+            hide_menu = true;
+        });
+
+        $('#gnb_1dul>li').bind('mouseleave', function() {
+            submenu_hide();
+        });
+
+        $(document).bind('click focusin', function() {
+            if (hide_menu) {
+                submenu_hide();
+            }
+        });
+
+        // 폰트 리사이즈 쿠키있으면 실행
+        var font_resize_act = get_cookie("ck_font_resize_act");
+        if (font_resize_act != "") {
+            font_resize("container", font_resize_act);
+        }
+    });
+
+    function submenu_hide() {
+        $(".gnb_1dli").removeClass("gnb_1dli_over gnb_1dli_over2 gnb_1dli_on");
+    }
+
+    function menu_rearrange(el) {
+        var width = $("#gnb_1dul").width();
+        var left = w1 = w2 = 0;
+        var idx = $(".gnb_1dli").index(el);
+
+        for (i = 0; i <= idx; i++) {
+            w1 = $(".gnb_1dli:eq(" + i + ")").outerWidth();
+            w2 = $(".gnb_2dli > a:eq(" + i + ")").outerWidth(true);
+
+            if ((left + w2) > width) {
+                el.removeClass("gnb_1dli_over").addClass("gnb_1dli_over2");
+            }
+
+            left += w1;
+        }
+    }
+</script>
+
+
+<!-- <div style='float:left; text-align:center;'>RUN TIME : 0.011399984359741<br></div> -->
+<!-- ie6,7에서 사이드뷰가 게시판 목록에서 아래 사이드뷰에 가려지는 현상 수정 -->
+<!--[if lte IE 7]>
+<script>
+$(function() {
+    var $sv_use = $(".sv_use");
+    var count = $sv_use.length;
+
+    $sv_use.each(function() {
+        $(this).css("z-index", count);
+        $(this).css("position", "relative");
+        count = count - 1;
+    });
+});
+</script>
+<![endif]-->
+
+
+
+
+<div id="monica-content-root" class="monica-widget" style="pointer-events: auto;"></div></body></html>

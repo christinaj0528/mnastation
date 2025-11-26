@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko" class="fullpage">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>M&A 소식 상세 - M&A STATION</title>
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/layout.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <style>
+      .detail-page {
+        min-height: 100vh;
+        padding: var(--spacing-xxl);
+        padding-top: calc(var(--spacing-xxl) + 60px);
+        background: var(--bg-primary);
+        position: relative;
+        overflow: visible;
+      }
+
+      .detail-page::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(circle at 20% 50%, rgba(77, 183, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(77, 183, 255, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .detail-container {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .detail-header {
+        margin-bottom: var(--spacing-xxl);
+      }
+
+      .detail-title {
+        font-size: 36px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-md);
+        line-height: 1.4;
+      }
+
+      .detail-meta {
+        display: flex;
+        gap: var(--spacing-lg);
+        color: var(--text-muted);
+        font-size: var(--font-size-small);
+        margin-bottom: var(--spacing-xl);
+        flex-wrap: wrap;
+      }
+
+      .detail-image {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        border-radius: 16px;
+        margin-bottom: var(--spacing-xxl);
+      }
+
+      .detail-content {
+        line-height: 1.8;
+        color: var(--text-primary);
+        white-space: pre-wrap;
+        font-size: var(--font-size-base);
+        margin-bottom: var(--spacing-xxl);
+      }
+
+      .detail-attachments {
+        margin-top: var(--spacing-xxl);
+        padding-top: var(--spacing-xl);
+        border-top: 1px solid var(--border-light);
+      }
+
+      .detail-attachments h3 {
+        font-size: 20px;
+        margin-bottom: var(--spacing-md);
+        color: var(--text-primary);
+      }
+
+      .attachment-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-md);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        margin-bottom: var(--spacing-sm);
+        text-decoration: none;
+        color: var(--accent-primary);
+        transition: all var(--transition-fast);
+      }
+
+      .attachment-item:hover {
+        background: rgba(77, 183, 255, 0.1);
+      }
+
+      .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        padding: var(--spacing-sm) var(--spacing-md);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        color: var(--text-primary);
+        text-decoration: none;
+        margin-bottom: var(--spacing-xl);
+        transition: all var(--transition-fast);
+      }
+
+      .back-button:hover {
+        background: rgba(77, 183, 255, 0.1);
+        border-color: var(--accent-primary);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: var(--spacing-xxl);
+        color: var(--text-muted);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="../index.html" class="brand" style="text-decoration: none; color: inherit;">M&A STATION</a>
+      <div class="top-actions">
+        <button id="menuToggle" class="hamburger" aria-label="메뉴 열기">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <aside class="menu-panel" id="menuPanel" aria-hidden="true"></aside>
+    
+    <div class="detail-page">
+      <div class="detail-container">
+        <a href="news.html" class="back-button">← 목록으로</a>
+        
+        <div id="detailContent">
+          <div class="empty-state">
+            <div>로딩 중...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const NEWS_STORAGE_KEY = 'mna_station_news';
+
+      function formatFileSize(bytes) {
+        if (!bytes) return '';
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+      }
+
+      function loadNewsDetail() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        
+        if (!id) {
+          document.getElementById('detailContent').innerHTML = `
+            <div class="empty-state">
+              <div>소식을 찾을 수 없습니다.</div>
+            </div>
+          `;
+          return;
+        }
+
+        const news = JSON.parse(localStorage.getItem(NEWS_STORAGE_KEY) || '[]');
+        const newsItem = news.find(n => n.id === id);
+
+        if (!newsItem) {
+          document.getElementById('detailContent').innerHTML = `
+            <div class="empty-state">
+              <div>소식을 찾을 수 없습니다.</div>
+            </div>
+          `;
+          return;
+        }
+
+        const date = new Date(newsItem.createdAt).toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        let html = `
+          <div class="detail-header">
+            <h1 class="detail-title">${newsItem.title || '(제목 없음)'}</h1>
+            <div class="detail-meta">
+              <span>작성일: ${date}</span>
+            </div>
+          </div>
+        `;
+
+        if (newsItem.image) {
+          html += `<img src="${newsItem.image}" alt="${newsItem.title}" class="detail-image">`;
+        }
+
+        html += `
+          <div class="detail-content">
+            ${newsItem.content || newsItem.description || ''}
+          </div>
+        `;
+
+        if (newsItem.attachments && newsItem.attachments.length > 0) {
+          html += `
+            <div class="detail-attachments">
+              <h3>첨부 파일</h3>
+              ${newsItem.attachments.map(file => `
+                <a href="${file.data}" download="${file.name}" class="attachment-item">
+                  <span style="font-size: 20px;">📎</span>
+                  <span style="flex: 1;">${file.name}</span>
+                  <span style="font-size: 12px; color: var(--text-muted);">${formatFileSize(file.size)}</span>
+                </a>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        document.getElementById('detailContent').innerHTML = html;
+        document.title = `${newsItem.title} - M&A 소식 - M&A STATION`;
+      }
+
+      loadNewsDetail();
+    </script>
+    
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/menu.js"></script>
+    
+    <nav class="bottom-tabs">
+      <div class="tab-item" data-index="0" onclick="window.location.href='../index.html'">
+        <div class="icon">🏠</div>
+        <div class="label">홈</div>
+      </div>
+      <div class="tab-item" data-index="1" onclick="window.location.href='../listings/sellers.html'">
+        <div class="icon">📝</div>
+        <div class="label">등록</div>
+      </div>
+      <div class="tab-item active" data-index="3" onclick="window.location.href='news.html'">
+        <div class="icon">📊</div>
+        <div class="label">인사이트</div>
+      </div>
+      <div class="tab-item" data-index="4" onclick="window.location.href='../support/consult.html'">
+        <div class="icon">💬</div>
+        <div class="label">상담</div>
+      </div>
+      <div class="tab-item" data-index="5" onclick="window.location.href='../account/mypage.html'">
+        <div class="icon">👤</div>
+        <div class="label">마이페이지</div>
+      </div>
+    </nav>
+</body>
+</html>
+

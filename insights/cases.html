@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko" class="fullpage">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>M&A 사례 - M&A STATION</title>
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/layout.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <!-- ⚠️ 중요: 헤더와 하단탭은 필수 요소입니다. 삭제하지 마세요! -->
+    <style>
+      /* Cases Page Specific Styles */
+      .cases-page {
+        min-height: 100vh;
+        padding: var(--spacing-xxl);
+        padding-top: calc(var(--spacing-xxl) + 60px);
+        background: var(--bg-primary);
+        position: relative;
+        overflow: visible;
+      }
+
+      .cases-page::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(circle at 20% 50%, rgba(77, 183, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(77, 183, 255, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .cases-container {
+        position: relative;
+        z-index: 1;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: var(--spacing-xxl);
+      }
+
+      .page-header h1 {
+        font-size: 36px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-sm);
+        letter-spacing: -0.5px;
+      }
+
+      .page-header p {
+        font-size: var(--font-size-base);
+        color: var(--text-muted);
+        opacity: 0.8;
+      }
+
+      .board-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+      }
+
+      .search-box {
+        flex: 1;
+        min-width: 250px;
+        position: relative;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 12px 16px;
+        padding-left: 40px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-size: var(--font-size-base);
+        transition: all var(--transition-fast);
+      }
+
+      .search-box input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 0 3px rgba(77, 183, 255, 0.1);
+      }
+
+      .search-box::before {
+        content: '🔍';
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        opacity: 0.6;
+      }
+
+      .cases-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: var(--spacing-xl);
+        margin-bottom: var(--spacing-xxl);
+      }
+
+      .case-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-light);
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all var(--transition-normal);
+        text-decoration: none;
+        color: var(--text-primary);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .case-card:hover {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--accent-primary);
+        box-shadow: 0 8px 32px rgba(77, 183, 255, 0.3);
+      }
+
+      .case-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, rgba(77, 183, 255, 0.2), rgba(77, 183, 255, 0.05));
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .case-image::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.3));
+      }
+
+      .case-content {
+        padding: var(--spacing-xl);
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+
+      .case-date {
+        font-size: var(--font-size-xs);
+        color: var(--text-muted);
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .case-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: var(--spacing-md);
+        line-height: 1.4;
+        color: var(--text-primary);
+      }
+
+      .case-description {
+        font-size: var(--font-size-small);
+        color: var(--text-muted);
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        flex: 1;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: var(--spacing-xxl) * 2;
+        color: var(--text-muted);
+      }
+
+      .empty-state-icon {
+        font-size: 64px;
+        margin-bottom: var(--spacing-lg);
+        opacity: 0.5;
+      }
+
+      .back-link {
+        position: absolute;
+        top: var(--spacing-xl);
+        left: var(--spacing-xl);
+        z-index: 10;
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: var(--font-size-small);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        opacity: 0.8;
+        transition: opacity var(--transition-fast);
+      }
+
+      .back-link:hover {
+        opacity: 1;
+      }
+
+      @media (max-width: 768px) {
+        .cases-page {
+          padding: var(--spacing-lg);
+          padding-top: calc(var(--spacing-lg) + 50px);
+        }
+
+        .cases-grid {
+          grid-template-columns: 1fr;
+          gap: var(--spacing-lg);
+        }
+
+        .page-header h1 {
+          font-size: 28px;
+        }
+
+        .back-link {
+          top: var(--spacing-md);
+          left: var(--spacing-md);
+        }
+      }
+    </style>
+  </head>
+  <body class="fullpage">
+    <!-- ⚠️ 중요: 헤더 시작 - 삭제하지 마세요! -->
+    <header class="top-bar">
+      <a href="../index.html" class="brand" style="text-decoration: none; color: inherit;">M&A STATION</a>
+      <div class="top-actions">
+        <button id="menuToggle" class="hamburger" aria-label="메뉴 열기">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 햄버거 메뉴는 menu.js에서 동적으로 생성됩니다 -->
+    <aside class="menu-panel" id="menuPanel" aria-hidden="true"></aside>
+    <!-- ⚠️ 중요: 헤더 끝 -->
+    <a href="../index.html" class="back-link">← 홈으로</a>
+    
+    <div class="cases-page">
+      <div class="cases-container">
+        <div class="page-header">
+          <h1>M&A 사례</h1>
+          <p>성공적인 M&A 사례를 확인하세요</p>
+        </div>
+
+        <div class="board-controls">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="제목으로 검색..." onkeyup="handleSearch(event)">
+          </div>
+        </div>
+
+        <div class="cases-grid" id="casesGrid">
+          <div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <div>등록된 사례가 없습니다.</div>
+			</div>
+		</div>
+	</div>
+		</div>
+
+    <script>
+      // 데이터 저장 키
+      const CASES_STORAGE_KEY = 'mna_station_cases';
+
+      let allCases = [];
+      let filteredCases = [];
+
+      // 사례 데이터 로드
+      function loadCases() {
+        allCases = JSON.parse(localStorage.getItem(CASES_STORAGE_KEY) || '[]');
+        allCases.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        filteredCases = [...allCases];
+        renderCases();
+      }
+
+      function renderCases() {
+        const grid = document.getElementById('casesGrid');
+        
+        if (filteredCases.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state" style="grid-column: 1 / -1;">
+              <div class="empty-state-icon">📋</div>
+              <div>등록된 사례가 없습니다.</div>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = filteredCases.map(caseItem => {
+          const date = new Date(caseItem.createdAt).toLocaleDateString('ko-KR');
+          return `
+            <a href="case_detail.html?id=${caseItem.id}" class="case-card">
+              <div class="case-image" style="background-image: url('${caseItem.image || ''}');"></div>
+              <div class="case-content">
+                <div class="case-date">${date}</div>
+                <h2 class="case-title">${caseItem.title}</h2>
+                <p class="case-description">${caseItem.description || ''}</p>
+              </div>
+            </a>
+          `;
+        }).join('');
+      }
+
+      function handleSearch(event) {
+        if (event.key === 'Enter' || event.target.value === '') {
+          const searchTerm = event.target.value.toLowerCase();
+          if (searchTerm === '') {
+            filteredCases = [...allCases];
+          } else {
+            filteredCases = allCases.filter(caseItem => 
+              caseItem.title.toLowerCase().includes(searchTerm) ||
+              (caseItem.description && caseItem.description.toLowerCase().includes(searchTerm)) ||
+              (caseItem.content && caseItem.content.toLowerCase().includes(searchTerm))
+            );
+          }
+          renderCases();
+        }
+      }
+
+
+      // 초기화
+      loadCases();
+
+      // ⚠️ 중요: 햄버거 메뉴는 menu.js에서 처리됩니다
+    </script>
+    
+    <!-- 햄버거 메뉴 공통 모듈 -->
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/menu.js"></script>
+    
+    <!-- ⚠️ 중요: 하단탭 시작 - 삭제하지 마세요! -->
+    <nav class="bottom-tabs">
+      <div class="tab-item" data-index="0" onclick="window.location.href='../index.html'">
+        <div class="icon">🏠</div>
+        <div class="label">홈</div>
+      </div>
+      <div class="tab-item" data-index="1" onclick="window.location.href='../listings/sellers.html'">
+        <div class="icon">📝</div>
+        <div class="label">등록</div>
+      </div>
+      <div class="tab-item active" data-index="3" onclick="window.location.href='cases.html'">
+        <div class="icon">📊</div>
+        <div class="label">인사이트</div>
+      </div>
+      <div class="tab-item" data-index="4" onclick="window.location.href='../support/consult.html'">
+        <div class="icon">💬</div>
+        <div class="label">상담</div>
+      </div>
+      <div class="tab-item" data-index="5" onclick="window.location.href='../account/mypage.html'">
+        <div class="icon">👤</div>
+        <div class="label">마이페이지</div>
+      </div>
+    </nav>
+    <!-- ⚠️ 중요: 하단탭 끝 -->
+</body>
+</html>

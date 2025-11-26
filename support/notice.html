@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ko" class="fullpage">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>공지사항 - M&A STATION</title>
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/layout.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <style>
+      /* Board Page Specific Styles */
+      .board-page {
+        min-height: 100vh;
+        padding: var(--spacing-xxl);
+        padding-top: calc(var(--spacing-xxl) + 60px);
+        background: var(--bg-primary);
+        position: relative;
+        overflow: visible;
+      }
+
+      .board-page::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(circle at 20% 50%, rgba(77, 183, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(77, 183, 255, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .board-container {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: var(--spacing-xxl);
+      }
+
+      .page-header h1 {
+        font-size: 36px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-sm);
+        letter-spacing: -0.5px;
+      }
+
+      .page-header p {
+        font-size: var(--font-size-base);
+        color: var(--text-muted);
+        opacity: 0.8;
+      }
+
+      .board-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+      }
+
+      .search-box {
+        flex: 1;
+        min-width: 250px;
+        position: relative;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 12px 16px;
+        padding-left: 40px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-size: var(--font-size-base);
+        transition: all var(--transition-fast);
+      }
+
+      .search-box input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 0 3px rgba(77, 183, 255, 0.1);
+      }
+
+      .search-box::before {
+        content: '🔍';
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        opacity: 0.6;
+      }
+
+      .board-table {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-light);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .board-table thead {
+        background: rgba(77, 183, 255, 0.1);
+      }
+
+      .board-table th {
+        padding: 16px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: var(--font-size-small);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--border-light);
+      }
+
+      .board-table th:first-child {
+        width: 80px;
+        text-align: center;
+      }
+
+      .board-table th:nth-child(2) {
+        width: auto;
+      }
+
+      .board-table th:nth-child(3) {
+        width: 120px;
+        text-align: center;
+      }
+
+      .board-table th:nth-child(4) {
+        width: 120px;
+        text-align: center;
+      }
+
+      .board-table td {
+        padding: 16px;
+        border-bottom: 1px solid var(--border-light);
+        color: var(--text-primary);
+        font-size: var(--font-size-base);
+      }
+
+      .board-table tbody tr {
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+
+      .board-table tbody tr:hover {
+        background: rgba(77, 183, 255, 0.05);
+      }
+
+      .board-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .board-table td:first-child {
+        text-align: center;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      .board-table td:nth-child(2) {
+        font-weight: 500;
+      }
+
+      .board-table td:nth-child(3),
+      .board-table td:nth-child(4) {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: var(--font-size-small);
+      }
+
+      .notice-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        background: rgba(255, 87, 87, 0.2);
+        color: #ff5757;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-right: 8px;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: var(--spacing-xxl);
+        color: var(--text-muted);
+      }
+
+      .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: var(--spacing-md);
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-xl);
+      }
+
+      .pagination button {
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+
+      .pagination button:hover:not(:disabled) {
+        background: rgba(77, 183, 255, 0.1);
+        border-color: var(--accent-primary);
+      }
+
+      .pagination button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .pagination .active {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: white;
+      }
+
+      @media (max-width: 768px) {
+        .board-table {
+          font-size: var(--font-size-small);
+        }
+
+        .board-table th,
+        .board-table td {
+          padding: 12px 8px;
+        }
+
+        .board-table th:nth-child(4),
+        .board-table td:nth-child(4) {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ⚠️ 중요: 헤더 시작 - 삭제하지 마세요! -->
+    <header class="site-header">
+      <a href="../index.html" class="brand" style="text-decoration: none; color: inherit;">M&A STATION</a>
+      <div class="top-actions">
+        <button id="menuToggle" class="hamburger" aria-label="메뉴 열기">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <aside class="menu-panel" id="menuPanel" aria-hidden="true"></aside>
+    <!-- ⚠️ 중요: 헤더 끝 -->
+    <a href="../index.html" class="back-link">← 홈으로</a>
+    
+    <div class="board-page">
+      <div class="board-container">
+        <div class="page-header">
+          <h1>공지사항</h1>
+          <p>M&A STATION의 중요한 공지사항을 확인하세요</p>
+        </div>
+
+        <div class="board-controls">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="제목으로 검색..." onkeyup="handleSearch(event)">
+          </div>
+        </div>
+
+        <table class="board-table">
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>제목</th>
+              <th>작성일</th>
+              <th>조회수</th>
+            </tr>
+          </thead>
+          <tbody id="noticeList">
+            <tr>
+              <td colspan="4" class="empty-state">
+                <div class="empty-state-icon">📢</div>
+                <div>등록된 공지사항이 없습니다.</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
+
+
+    <script>
+      const NOTICE_STORAGE_KEY = 'mna_station_notices';
+      let currentPage = 1;
+      const itemsPerPage = 10;
+      let allNotices = [];
+      let filteredNotices = [];
+
+      function loadNotices() {
+        allNotices = JSON.parse(localStorage.getItem(NOTICE_STORAGE_KEY) || '[]');
+        allNotices.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        filteredNotices = [...allNotices];
+        renderNotices();
+        renderPagination();
+      }
+
+      function renderNotices() {
+        const tbody = document.getElementById('noticeList');
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const pageNotices = filteredNotices.slice(start, end);
+
+        if (pageNotices.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="4" class="empty-state">
+                <div class="empty-state-icon">📢</div>
+                <div>등록된 공지사항이 없습니다.</div>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = pageNotices.map((notice, index) => {
+          const date = new Date(notice.createdAt).toLocaleDateString('ko-KR');
+          const noticeNum = filteredNotices.length - start - index;
+          return `
+            <tr onclick="window.location.href='notice_detail.html?id=${notice.id}'" style="cursor: pointer;">
+              <td>${noticeNum}</td>
+              <td>
+                ${notice.isImportant ? '<span class="notice-badge">중요</span>' : ''}
+                ${notice.title}
+              </td>
+              <td>${date}</td>
+              <td>${notice.views || 0}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      function renderPagination() {
+        const totalPages = Math.ceil(filteredNotices.length / itemsPerPage);
+        const pagination = document.getElementById('pagination');
+        
+        if (totalPages <= 1) {
+          pagination.innerHTML = '';
+          return;
+        }
+
+        let html = `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>이전</button>`;
+        
+        for (let i = 1; i <= totalPages; i++) {
+          if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+            html += `<button onclick="changePage(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
+          } else if (i === currentPage - 3 || i === currentPage + 3) {
+            html += `<span style="color: var(--text-muted);">...</span>`;
+          }
+        }
+        
+        html += `<button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>다음</button>`;
+        pagination.innerHTML = html;
+      }
+
+      function changePage(page) {
+        currentPage = page;
+        renderNotices();
+        renderPagination();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function handleSearch(event) {
+        if (event.key === 'Enter' || event.target.value === '') {
+          const searchTerm = event.target.value.toLowerCase();
+          if (searchTerm === '') {
+            filteredNotices = [...allNotices];
+          } else {
+            filteredNotices = allNotices.filter(notice => 
+              notice.title.toLowerCase().includes(searchTerm) ||
+              (notice.content && notice.content.toLowerCase().includes(searchTerm))
+            );
+          }
+          currentPage = 1;
+          renderNotices();
+          renderPagination();
+        }
+      }
+
+
+      loadNotices();
+    </script>
+    
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/menu.js"></script>
+    
+    <nav class="bottom-tabs">
+      <div class="tab-item" data-index="0" onclick="window.location.href='../index.html'">
+        <div class="icon">🏠</div>
+        <div class="label">홈</div>
+      </div>
+      <div class="tab-item" data-index="1" onclick="window.location.href='../listings/sellers.html'">
+        <div class="icon">📝</div>
+        <div class="label">등록</div>
+      </div>
+      <div class="tab-item" data-index="3" onclick="window.location.href='../insights/cases.html'">
+        <div class="icon">📊</div>
+        <div class="label">인사이트</div>
+      </div>
+      <div class="tab-item" data-index="4" onclick="window.location.href='consult.html'">
+        <div class="icon">💬</div>
+        <div class="label">상담</div>
+      </div>
+      <div class="tab-item active" data-index="5" onclick="window.location.href='notice.html'">
+        <div class="icon">👤</div>
+        <div class="label">마이페이지</div>
+      </div>
+    </nav>
+</body>
+</html>

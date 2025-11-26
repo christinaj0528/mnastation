@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>M&A STATION | 실리콘밸리식 M&A</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+        background: #333;
+        color: #fff;
+      }
+
+      body {
+        padding-top: 72px;
+        min-height: 100vh;
+      }
+
+      .top-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 32px;
+        background: rgba(20, 20, 20, 0.8);
+        backdrop-filter: blur(12px);
+        z-index: 100;
+      }
+
+      .brand {
+        font-size: 1rem;
+        letter-spacing: 0.18em;
+        font-weight: 600;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .hamburger {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+
+      .hamburger span {
+        width: 18px;
+        height: 2px;
+        background: #fff;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+      }
+
+      .hamburger.active span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+
+      .hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+
+      .menu-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: min(360px, 80vw);
+        height: 100vh;
+        padding: 110px 32px 32px;
+        background: rgba(10, 10, 10, 0.92);
+        backdrop-filter: blur(18px);
+        transform: translateX(100%);
+        transition: transform 0.4s ease;
+        z-index: 90;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow-y: auto;
+      }
+
+      .menu-panel.open {
+        transform: translateX(0);
+      }
+
+      .menu-panel ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .menu-panel li {
+        font-size: 0.95rem;
+        line-height: 1.4;
+        color: rgba(255, 255, 255, 0.88);
+      }
+
+      .menu-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 12px;
+      }
+
+      .group-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 0.95rem;
+        text-align: left;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .group-toggle span.label {
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #8fd8ff;
+      }
+
+      .group-toggle .arrow {
+        width: 10px;
+        height: 10px;
+        border-right: 2px solid #8fd8ff;
+        border-bottom: 2px solid #8fd8ff;
+        transform: rotate(45deg);
+        transition: transform 0.3s ease;
+      }
+
+      .menu-group.open .group-toggle .arrow {
+        transform: rotate(-135deg);
+      }
+
+      .submenu {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.35s ease, opacity 0.25s ease;
+        padding-left: 4px;
+      }
+
+      .menu-group.open .submenu {
+        max-height: 400px;
+        opacity: 1;
+        margin-top: 6px;
+      }
+
+      .menu-panel .contact {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 0.9rem;
+        opacity: 0.85;
+      }
+
+      .menu-panel .contact strong {
+        font-size: 1rem;
+        color: #fff;
+      }
+
+      .menu-panel .cta-btn {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 0;
+        border-radius: 999px;
+        background: linear-gradient(120deg, #4db7ff, #1f6fe5);
+        color: #081627;
+        font-weight: 600;
+        text-decoration: none;
+        margin-top: 8px;
+      }
+
+      .page-content {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 3rem 5vw;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding-top: 60px;
+        }
+
+        .top-bar {
+          height: 60px;
+          padding: 0 16px;
+        }
+
+        .top-actions {
+          gap: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top-bar">
+      <div class="brand">MN&A STATION</div>
+      <div class="top-actions">
+        <button id="menuToggle" class="hamburger" aria-label="메뉴 열기">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <aside class="menu-panel" id="menuPanel" aria-hidden="true">
+      <div class="menu-group">
+        <button class="group-toggle" aria-expanded="false">
+          <span class="label">로그인 / 회원가입 정보</span>
+          <span class="arrow"></span>
+        </button>
+        <ul class="submenu">
+          <li>회원가입</li>
+          <li>로그인</li>
+          <li>회원 정보 관리</li>
+        </ul>
+      </div>
+      <div class="menu-group">
+        <button class="group-toggle" aria-expanded="false">
+          <span class="label">플랫폼 소개</span>
+          <span class="arrow"></span>
+        </button>
+        <ul class="submenu">
+          <li>엠앤에이 스테이션 소개</li>
+          <li>실리콘밸리식 M&A</li>
+          <li>구성원(팀 소개)</li>
+        </ul>
+      </div>
+      <div class="menu-group">
+        <button class="group-toggle" aria-expanded="false">
+          <span class="label">M&A 등록 현황</span>
+          <span class="arrow"></span>
+        </button>
+        <ul class="submenu">
+          <li>M&A 등록 현황</li>
+          <li>매도기업 현황</li>
+          <li>매수기업 현황</li>
+          <li>M&A 신청/등록</li>
+          <li>매도기업 등록</li>
+          <li>매수기업 등록</li>
+        </ul>
+      </div>
+      <div class="menu-group">
+        <button class="group-toggle" aria-expanded="false">
+          <span class="label">인사이트</span>
+          <span class="arrow"></span>
+        </button>
+        <ul class="submenu">
+          <li>인사이트</li>
+          <li>M&A 사례</li>
+          <li>M&A 소식</li>
+        </ul>
+      </div>
+      <div class="menu-group">
+        <button class="group-toggle" aria-expanded="false">
+          <span class="label">고객센터</span>
+          <span class="arrow"></span>
+        </button>
+        <ul class="submenu">
+          <li>공지사항</li>
+          <li>자주 묻는 질문</li>
+        </ul>
+        <a class="cta-btn" href="#contact">상담신청</a>
+        <div class="contact">
+          <div><strong>이메일</strong><br />contact@igaenc.com</div>
+          <div><strong>전화번호</strong><br />02-000-0000</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="page-content">
+      <h1>실리콘밸리식 M&A</h1>
+      <p>This page is under construction. Updated content will be available soon.</p>
+    </main>
+
+    <script>
+      const menuToggle = document.getElementById("menuToggle");
+      const menuPanel = document.getElementById("menuPanel");
+
+      function toggleMenu(force) {
+        const willOpen =
+          typeof force === "boolean"
+            ? force
+            : !menuPanel.classList.contains("open");
+        menuPanel.classList.toggle("open", willOpen);
+        menuPanel.setAttribute("aria-hidden", !willOpen);
+        menuToggle.classList.toggle("active", willOpen);
+      }
+
+      menuToggle.addEventListener("click", () => toggleMenu());
+
+      const groupToggles = menuPanel.querySelectorAll(".group-toggle");
+
+      groupToggles.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const group = btn.closest(".menu-group");
+          if (!group) return;
+          const willOpen = !group.classList.contains("open");
+          group.classList.toggle("open", willOpen);
+          btn.setAttribute("aria-expanded", willOpen);
+        });
+      });
+
+      menuPanel.querySelectorAll("a, li").forEach((el) =>
+        el.addEventListener("click", () => toggleMenu(false))
+      );
+    </script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/menu.js"></script>
+  </body>
+</html>

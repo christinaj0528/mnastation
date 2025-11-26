@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>신청 관리 - M&A STATION</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #4db7ff;
+    }
+
+    .filter-section {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filter-group label {
+      font-size: 14px;
+      color: #666;
+      white-space: nowrap;
+    }
+
+    .filter-group select,
+    .filter-group input {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .filter-group input {
+      min-width: 200px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #4db7ff;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1f6fe5;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #218838;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    thead {
+      background: #f8f9fa;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    th {
+      font-weight: 600;
+      color: #333;
+      font-size: 14px;
+    }
+
+    td {
+      font-size: 13px;
+      color: #666;
+    }
+
+    tbody tr:hover {
+      background: #f8f9fa;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-waiting {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-processing {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+
+    .status-completed {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-cancelled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .type-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .type-buyer {
+      background: #cfe2ff;
+      color: #084298;
+    }
+
+    .type-seller {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .new-badge {
+      background: #dc3545;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 10px;
+      margin-left: 5px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      max-width: 800px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .modal-close:hover {
+      color: #333;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .info-section {
+      margin-bottom: 20px;
+    }
+
+    .info-section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .info-row {
+      display: flex;
+      margin-bottom: 12px;
+    }
+
+    .info-label {
+      width: 140px;
+      font-weight: 600;
+      color: #666;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .info-value {
+      flex: 1;
+      color: #333;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 20px;
+      border-top: 1px solid #dee2e6;
+    }
+
+    @media (max-width: 768px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="pageTitle">신청 관리</h1>
+
+    <div class="filter-section">
+      <div class="filter-group" id="typeFilterGroup" style="display: none;">
+        <label>유형:</label>
+        <select id="typeFilter">
+          <option value="">전체</option>
+          <option value="buyer">매수</option>
+          <option value="seller">매도</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>상태:</label>
+        <select id="statusFilter">
+          <option value="">전체</option>
+          <option value="대기중">대기중</option>
+          <option value="처리중">처리중</option>
+          <option value="완료">완료</option>
+          <option value="취소">취소</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>검색:</label>
+        <input type="text" id="searchInput" placeholder="회사명, 회원명, 이메일 검색">
+      </div>
+      <button class="btn btn-primary" onclick="applyFilters()">필터 적용</button>
+      <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>신청 ID</th>
+            <th>신청일시</th>
+            <th>유형</th>
+            <th>회원명</th>
+            <th>이메일</th>
+            <th>회사명</th>
+            <th>상태</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody id="applicationTableBody">
+          <!-- 동적으로 생성됨 -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <div class="empty-state-icon">📋</div>
+      <div>신청 내역이 없습니다.</div>
+    </div>
+  </div>
+
+  <!-- 상세 정보 모달 -->
+  <div id="detailModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">신청 상세 정보</div>
+        <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="detailModalBody">
+        <!-- 동적으로 생성됨 -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeDetailModal()">닫기</button>
+        <button class="btn btn-primary" id="updateStatusBtn" onclick="updateStatus()">상태 변경</button>
+        <button class="btn btn-success" id="approveBtn" onclick="approveApplication()">승인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let applications = [];
+    let filteredApplications = [];
+    let currentApplication = null;
+    let currentType = null; // 'buyer' 또는 'seller' 또는 null (전체)
+
+    // URL 파라미터에서 type 가져오기
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // 페이지 제목 설정
+    function setPageTitle() {
+      const titleElement = document.getElementById('pageTitle');
+      if (currentType === 'seller') {
+        titleElement.textContent = '매도현황';
+      } else if (currentType === 'buyer') {
+        titleElement.textContent = '매수현황';
+      } else {
+        titleElement.textContent = '신청 관리';
+      }
+    }
+
+    // LocalStorage에서 신청 데이터 로드
+    function loadApplications() {
+      // URL 파라미터에서 type 확인
+      const typeParam = getUrlParameter('type');
+      currentType = typeParam === 'buyer' ? 'buyer' : (typeParam === 'seller' ? 'seller' : null);
+      
+      // 페이지 제목 설정
+      setPageTitle();
+      
+      // 타입 필터 그룹 표시/숨김 (특정 타입 페이지에서는 숨김)
+      const typeFilterGroup = document.getElementById('typeFilterGroup');
+      if (currentType) {
+        typeFilterGroup.style.display = 'none';
+      } else {
+        typeFilterGroup.style.display = 'flex';
+      }
+      
+      const data = localStorage.getItem('mna_station_applications');
+      applications = data ? JSON.parse(data) : [];
+      
+      // 타입에 따라 필터링
+      if (currentType) {
+        applications = applications.filter(app => app.type === currentType);
+      }
+      
+      filteredApplications = [...applications];
+      renderTable();
+    }
+
+    // 테이블 렌더링
+    function renderTable() {
+      const tbody = document.getElementById('applicationTableBody');
+      const emptyState = document.getElementById('emptyState');
+
+      if (filteredApplications.length === 0) {
+        tbody.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      
+      // 최신순으로 정렬
+      const sorted = [...filteredApplications].sort((a, b) => 
+        new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      tbody.innerHTML = sorted.map(app => {
+        const date = new Date(app.createdAt);
+        const dateStr = date.toLocaleDateString('ko-KR') + ' ' + 
+                       date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+        
+        const statusClass = getStatusClass(app.status);
+        const typeClass = app.type === 'buyer' ? 'type-buyer' : 'type-seller';
+        const typeText = app.type === 'buyer' ? '매수' : '매도';
+        const isNew = new Date(app.createdAt) > new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+        return `
+          <tr>
+            <td>${app.id}${isNew ? '<span class="new-badge">NEW</span>' : ''}</td>
+            <td>${dateStr}</td>
+            <td><span class="type-badge ${typeClass}">${typeText}</span></td>
+            <td>${app.userName}</td>
+            <td>${app.userEmail}</td>
+            <td>${app.company_name || '-'}</td>
+            <td><span class="status-badge ${statusClass}">${app.status}</span></td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-primary btn-sm" onclick="showDetail('${app.id}')">상세</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteApplication('${app.id}')">삭제</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function getStatusClass(status) {
+      const statusMap = {
+        '대기중': 'status-waiting',
+        '처리중': 'status-processing',
+        '완료': 'status-completed',
+        '취소': 'status-cancelled'
+      };
+      return statusMap[status] || 'status-waiting';
+    }
+
+    // 필터 적용
+    function applyFilters() {
+      const statusFilter = document.getElementById('statusFilter').value;
+      const typeFilter = document.getElementById('typeFilter').value;
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+      filteredApplications = applications.filter(app => {
+        const matchStatus = !statusFilter || app.status === statusFilter;
+        // currentType이 설정되어 있으면 typeFilter는 무시하고 currentType만 사용
+        const matchType = currentType ? app.type === currentType : (!typeFilter || app.type === typeFilter);
+        const matchSearch = !searchTerm || 
+          (app.company_name && app.company_name.toLowerCase().includes(searchTerm)) ||
+          (app.userName && app.userName.toLowerCase().includes(searchTerm)) ||
+          (app.userEmail && app.userEmail.toLowerCase().includes(searchTerm));
+
+        return matchStatus && matchType && matchSearch;
+      });
+
+      renderTable();
+    }
+
+    // 필터 초기화
+    function resetFilters() {
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('typeFilter').value = '';
+      document.getElementById('searchInput').value = '';
+      filteredApplications = [...applications];
+      renderTable();
+    }
+
+    // 상세 정보 보기
+    function showDetail(id) {
+      currentApplication = applications.find(a => a.id === id);
+      if (!currentApplication) return;
+
+      const modalBody = document.getElementById('detailModalBody');
+      const date = new Date(currentApplication.createdAt);
+      const dateStr = date.toLocaleDateString('ko-KR') + ' ' + 
+                     date.toLocaleTimeString('ko-KR');
+
+      let detailHTML = `
+        <div class="info-section">
+          <div class="info-section-title">기본 정보</div>
+          <div class="info-row">
+            <div class="info-label">신청 ID:</div>
+            <div class="info-value">${currentApplication.id}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">신청일시:</div>
+            <div class="info-value">${dateStr}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">유형:</div>
+            <div class="info-value">${currentApplication.type === 'buyer' ? '매수' : '매도'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">상태:</div>
+            <div class="info-value">
+              <select id="statusSelect" style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="대기중" ${currentApplication.status === '대기중' ? 'selected' : ''}>대기중</option>
+                <option value="처리중" ${currentApplication.status === '처리중' ? 'selected' : ''}>처리중</option>
+                <option value="완료" ${currentApplication.status === '완료' ? 'selected' : ''}>완료</option>
+                <option value="취소" ${currentApplication.status === '취소' ? 'selected' : ''}>취소</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-section-title">담당자 정보</div>
+          <div class="info-row">
+            <div class="info-label">성명:</div>
+            <div class="info-value">${currentApplication.name || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">휴대폰:</div>
+            <div class="info-value">${currentApplication.hp || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">직책:</div>
+            <div class="info-value">${currentApplication.duty || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">이메일:</div>
+            <div class="info-value">${currentApplication.email || '-'}</div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-section-title">회사 정보</div>
+          <div class="info-row">
+            <div class="info-label">회사명:</div>
+            <div class="info-value">${currentApplication.company_name || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">사업자번호:</div>
+            <div class="info-value">${currentApplication.company_ssn || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">기업형태:</div>
+            <div class="info-value">${currentApplication.company_type || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">소재지:</div>
+            <div class="info-value">${currentApplication.company_location || '-'}</div>
+          </div>
+      `;
+
+      if (currentApplication.type === 'buyer') {
+        detailHTML += `
+          <div class="info-row">
+            <div class="info-label">보유현금:</div>
+            <div class="info-value">${currentApplication.cash || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">희망 기업형태:</div>
+            <div class="info-value">${currentApplication.desire_company_type || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">희망 소재지:</div>
+            <div class="info-value">${currentApplication.desire_company_location || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">인수 예산:</div>
+            <div class="info-value">${currentApplication.buying_price || '-'}</div>
+          </div>
+        `;
+      } else {
+        detailHTML += `
+          <div class="info-row">
+            <div class="info-label">회사 연락처:</div>
+            <div class="info-value">${currentApplication.company_tel || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">희망 매도액:</div>
+            <div class="info-value">${currentApplication.selling_price || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">양도지분:</div>
+            <div class="info-value">${currentApplication.share || '-'}</div>
+          </div>
+        `;
+      }
+
+      detailHTML += `
+        </div>
+
+        <div class="info-section">
+          <div class="info-section-title">업종 정보</div>
+          <div class="info-row">
+            <div class="info-label">대분류:</div>
+            <div class="info-value">${currentApplication.category_big || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">중분류:</div>
+            <div class="info-value">${currentApplication.category_mid || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">소분류:</div>
+            <div class="info-value">${currentApplication.category_sml || '-'}</div>
+          </div>
+      `;
+
+      if (currentApplication.type === 'buyer') {
+        detailHTML += `
+          <div class="info-row">
+            <div class="info-label">세부아이템1:</div>
+            <div class="info-value">${currentApplication.detail_item1 || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">세부아이템2:</div>
+            <div class="info-value">${currentApplication.detail_item2 || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">세부아이템3:</div>
+            <div class="info-value">${currentApplication.detail_item3 || '-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">검색키워드:</div>
+            <div class="info-value">${currentApplication.keyword || '-'}</div>
+          </div>
+        `;
+      }
+
+      detailHTML += `
+        </div>
+      `;
+
+      modalBody.innerHTML = detailHTML;
+      document.getElementById('detailModal').classList.add('active');
+    }
+
+    // 상세 모달 닫기
+    function closeDetailModal() {
+      document.getElementById('detailModal').classList.remove('active');
+      currentApplication = null;
+    }
+
+    // 상태 변경
+    function updateStatus() {
+      if (!currentApplication) return;
+
+      const newStatus = document.getElementById('statusSelect').value;
+      const index = applications.findIndex(a => a.id === currentApplication.id);
+      
+      if (index !== -1) {
+        applications[index].status = newStatus;
+        currentApplication.status = newStatus;
+        localStorage.setItem('mna_station_applications', JSON.stringify(applications));
+        
+        applyFilters();
+        closeDetailModal();
+        alert('상태가 변경되었습니다.');
+      }
+    }
+
+    // 신청 승인 (listings에 추가)
+    function approveApplication() {
+      if (!currentApplication) return;
+
+      if (currentApplication.status === '완료') {
+        alert('이미 승인된 신청입니다.');
+        return;
+      }
+
+      if (!confirm('이 신청을 승인하고 listings에 추가하시겠습니까?')) return;
+
+      // listings 데이터 생성
+      const listingData = {
+        id: currentApplication.id,
+        category: currentApplication.category_mid || currentApplication.category_big || '기타',
+        name: currentApplication.company_name,
+        type: currentApplication.company_type || (currentApplication.type === 'buyer' ? currentApplication.desire_company_type : '중소기업') || '중소기업',
+        priceRange: currentApplication.type === 'buyer' 
+          ? (currentApplication.buying_price || '0~0억')
+          : (currentApplication.selling_price || '0~0억'),
+        capital: currentApplication.type === 'buyer' 
+          ? (currentApplication.cash || '0억원')
+          : '0억원',
+        isNew: false,
+        applicationId: currentApplication.id
+      };
+
+      // listings 데이터에 추가
+      if (currentApplication.type === 'buyer') {
+        const buyersListings = JSON.parse(localStorage.getItem('mna_station_buyers_listings') || '[]');
+        buyersListings.unshift(listingData);
+        localStorage.setItem('mna_station_buyers_listings', JSON.stringify(buyersListings));
+      } else {
+        const sellersListings = JSON.parse(localStorage.getItem('mna_station_sellers_listings') || '[]');
+        sellersListings.unshift(listingData);
+        localStorage.setItem('mna_station_sellers_listings', JSON.stringify(sellersListings));
+      }
+
+      // 상태를 완료로 변경
+      const index = applications.findIndex(a => a.id === currentApplication.id);
+      if (index !== -1) {
+        applications[index].status = '완료';
+        currentApplication.status = '완료';
+        localStorage.setItem('mna_station_applications', JSON.stringify(applications));
+      }
+
+      applyFilters();
+      closeDetailModal();
+      alert('신청이 승인되어 listings에 추가되었습니다.');
+    }
+
+    // 신청 삭제
+    function deleteApplication(id) {
+      if (!confirm('정말 삭제하시겠습니까?')) return;
+
+      applications = applications.filter(a => a.id !== id);
+      localStorage.setItem('mna_station_applications', JSON.stringify(applications));
+      
+      applyFilters();
+      alert('삭제되었습니다.');
+    }
+
+    // 더미데이터 관리
+    function manageDummyData() {
+      const buyersDummy = [
+        { id: 'MN-2025-101', category: 'IT/소프트웨어', name: '대형 IT 그룹', type: '대기업', priceRange: '10~30억', capital: '500억원' },
+        { id: 'MN-2025-102', category: '제조업', name: '자동차 부품 기업', type: '대기업', priceRange: '10~30억', capital: '800억원' },
+        { id: 'MN-2025-103', category: '서비스업', name: '헬스케어 그룹', type: '중견기업', priceRange: '10~30억', capital: '300억원' },
+        { id: 'MN-2025-104', category: '유통/물류', name: '물류 대기업', type: '대기업', priceRange: '30~50억', capital: '400억원' },
+        { id: 'MN-2025-105', category: '엔터테인먼트', name: '게임 퍼블리셔', type: '중견기업', priceRange: '30~50억', capital: '600억원' },
+        { id: 'MN-2025-106', category: '금융/핀테크', name: '금융그룹', type: '대기업', priceRange: '30~50억', capital: '1000억원' },
+        { id: 'MN-2025-107', category: '교육/에듀테크', name: '교육 그룹', type: '중견기업', priceRange: '50~70억', capital: '250억원' },
+        { id: 'MN-2025-108', category: '제조업', name: '화학 제조 기업', type: '대기업', priceRange: '50~70억', capital: '700억원' },
+        { id: 'MN-2025-109', category: '서비스업', name: '컨설팅 그룹', type: '중견기업', priceRange: '50~70억', capital: '350억원' },
+        { id: 'MN-2025-110', category: 'IT/소프트웨어', name: '클라우드 서비스 그룹', type: '대기업', priceRange: '70~90억', capital: '450억원' },
+        { id: 'MN-2025-111', category: '제조업', name: '반도체 제조 기업', type: '대기업', priceRange: '70~90억', capital: '1200억원' },
+        { id: 'MN-2025-112', category: '서비스업', name: '디지털 마케팅 그룹', type: '중견기업', priceRange: '70~90억', capital: '200억원' },
+        { id: 'MN-2025-113', category: '유통/물류', name: '전자상거래 그룹', type: '대기업', priceRange: '90~110억', capital: '550억원' },
+        { id: 'MN-2025-114', category: 'IT/소프트웨어', name: '모바일 플랫폼 기업', type: '중견기업', priceRange: '90~110억', capital: '280억원' },
+        { id: 'MN-2025-115', category: '제조업', name: '의료기기 제조 그룹', type: '대기업', priceRange: '90~110억', capital: '650억원' },
+        { id: 'MN-2025-116', category: '서비스업', name: '부동산 플랫폼 그룹', type: '중견기업', priceRange: '110~130억', capital: '320억원' },
+        { id: 'MN-2025-117', category: '금융/핀테크', name: '암호화폐 거래 그룹', type: '중견기업', priceRange: '110~130억', capital: '380억원' },
+        { id: 'MN-2025-118', category: '교육/에듀테크', name: '온라인 교육 그룹', type: '중견기업', priceRange: '110~130억', capital: '220억원' },
+        { id: 'MN-2025-119', category: '제조업', name: '전기차 배터리 그룹', type: '대기업', priceRange: '130~150억', capital: '1500억원' },
+        { id: 'MN-2025-120', category: 'IT/소프트웨어', name: '블록체인 솔루션 그룹', type: '중견기업', priceRange: '130~150억', capital: '290억원' },
+        { id: 'MN-2025-121', category: '서비스업', name: '음식 배달 플랫폼 그룹', type: '중견기업', priceRange: '130~150억', capital: '260억원' },
+        { id: 'MN-2025-122', category: '유통/물류', name: '해외직구 플랫폼 그룹', type: '중소기업', priceRange: '150~170억', capital: '150억원' },
+        { id: 'MN-2025-123', category: 'IT/소프트웨어', name: 'AI 음성인식 그룹', type: '중견기업', priceRange: '150~170억', capital: '310억원' },
+        { id: 'MN-2025-124', category: '제조업', name: '스마트홈 기기 그룹', type: '중견기업', priceRange: '150~170억', capital: '240억원' },
+        { id: 'MN-2025-125', category: '서비스업', name: '여행 예약 플랫폼 그룹', type: '중견기업', priceRange: '170~190억', capital: '270억원' },
+        { id: 'MN-2025-126', category: '금융/핀테크', name: 'P2P 금융 플랫폼 그룹', type: '중견기업', priceRange: '170~190억', capital: '330억원' },
+        { id: 'MN-2025-127', category: '교육/에듀테크', name: '온라인 학원 그룹', type: '중견기업', priceRange: '170~190억', capital: '210억원' },
+        { id: 'MN-2025-128', category: '제조업', name: '로봇 제조 그룹', type: '대기업', priceRange: '190~200억', capital: '900억원' },
+        { id: 'MN-2025-129', category: 'IT/소프트웨어', name: '사이버 보안 솔루션 그룹', type: '중견기업', priceRange: '190~200억', capital: '360억원' },
+        { id: 'MN-2025-130', category: '서비스업', name: '공유경제 플랫폼 그룹', type: '중견기업', priceRange: '190~200억', capital: '340억원' }
+      ];
+
+      const sellersDummy = [
+        { id: 'MN-2025-001', category: 'IT/소프트웨어', name: '글로벌 AI 스타트업', type: '중소기업', priceRange: '0~20억', capital: '2억원' },
+        { id: 'MN-2025-002', category: '제조업', name: '전자부품 제조사', type: '중견기업', priceRange: '0~20억', capital: '3억원' },
+        { id: 'MN-2025-003', category: '서비스업', name: '헬스케어 플랫폼', type: '중소기업', priceRange: '0~20억', capital: '2.5억원' },
+        { id: 'MN-2025-004', category: '유통/물류', name: '물류 솔루션 기업', type: '중견기업', priceRange: '20~40억', capital: '4억원' },
+        { id: 'MN-2025-005', category: 'IT/소프트웨어', name: '게임 개발 스튜디오', type: '중견기업', priceRange: '20~40억', capital: '5억원' },
+        { id: 'MN-2025-006', category: '금융/핀테크', name: '핀테크 스타트업', type: '중소기업', priceRange: '20~40억', capital: '4.5억원' },
+        { id: 'MN-2025-007', category: '교육/에듀테크', name: '온라인 교육 플랫폼', type: '중소기업', priceRange: '40~60억', capital: '6억원' },
+        { id: 'MN-2025-008', category: '제조업', name: '친환경 소재 제조사', type: '중견기업', priceRange: '40~60억', capital: '8억원' },
+        { id: 'MN-2025-009', category: '서비스업', name: '컨설팅 기업', type: '중소기업', priceRange: '40~60억', capital: '7억원' },
+        { id: 'MN-2025-010', category: 'IT/소프트웨어', name: '클라우드 서비스 기업', type: '중소기업', priceRange: '60~80억', capital: '9억원' },
+        { id: 'MN-2025-011', category: '제조업', name: '반도체 부품 제조사', type: '중견기업', priceRange: '60~80억', capital: '12억원' },
+        { id: 'MN-2025-012', category: '서비스업', name: '디지털 마케팅 대행사', type: '중소기업', priceRange: '60~80억', capital: '10억원' },
+        { id: 'MN-2025-013', category: '유통/물류', name: '전자상거래 플랫폼', type: '중소기업', priceRange: '80~100억', capital: '11억원' },
+        { id: 'MN-2025-014', category: 'IT/소프트웨어', name: '모바일 앱 개발사', type: '중소기업', priceRange: '80~100억', capital: '12억원' },
+        { id: 'MN-2025-015', category: '제조업', name: '바이오 의료기기 제조사', type: '중견기업', priceRange: '80~100억', capital: '15억원' },
+        { id: 'MN-2025-016', category: '서비스업', name: '부동산 플랫폼', type: '중소기업', priceRange: '100~120억', capital: '13억원' },
+        { id: 'MN-2025-017', category: '금융/핀테크', name: '암호화폐 거래소', type: '중소기업', priceRange: '100~120억', capital: '14억원' },
+        { id: 'MN-2025-018', category: '교육/에듀테크', name: '코딩 교육 플랫폼', type: '중소기업', priceRange: '100~120억', capital: '15억원' },
+        { id: 'MN-2025-019', category: '제조업', name: '전기차 배터리 제조사', type: '중견기업', priceRange: '120~140억', capital: '18억원' },
+        { id: 'MN-2025-020', category: 'IT/소프트웨어', name: '블록체인 솔루션 기업', type: '중소기업', priceRange: '120~140억', capital: '16억원' },
+        { id: 'MN-2025-021', category: '서비스업', name: '음식 배달 플랫폼', type: '중소기업', priceRange: '120~140억', capital: '17억원' },
+        { id: 'MN-2025-022', category: '유통/물류', name: '해외직구 대행 서비스', type: '중소기업', priceRange: '140~160억', capital: '18억원' },
+        { id: 'MN-2025-023', category: 'IT/소프트웨어', name: '인공지능 음성인식 기업', type: '중소기업', priceRange: '140~160억', capital: '20억원' },
+        { id: 'MN-2025-024', category: '제조업', name: '스마트홈 기기 제조사', type: '중소기업', priceRange: '140~160억', capital: '19억원' },
+        { id: 'MN-2025-025', category: '서비스업', name: '여행 예약 플랫폼', type: '중소기업', priceRange: '160~180억', capital: '20억원' },
+        { id: 'MN-2025-026', category: '금융/핀테크', name: 'P2P 금융 플랫폼', type: '중소기업', priceRange: '160~180억', capital: '22억원' },
+        { id: 'MN-2025-027', category: '교육/에듀테크', name: '온라인 학원 플랫폼', type: '중소기업', priceRange: '160~180억', capital: '21억원' },
+        { id: 'MN-2025-028', category: '제조업', name: '로봇 제조 기업', type: '중견기업', priceRange: '180~200억', capital: '25억원' },
+        { id: 'MN-2025-029', category: 'IT/소프트웨어', name: '사이버 보안 솔루션 기업', type: '중소기업', priceRange: '180~200억', capital: '23억원' },
+        { id: 'MN-2025-030', category: '서비스업', name: '공유경제 플랫폼', type: '중소기업', priceRange: '180~200억', capital: '24억원' }
+      ];
+
+      // 더미데이터를 관리용 데이터로 변환
+      const buyersDummyApplications = buyersDummy.map(item => ({
+        ...item,
+        type: 'buyer',
+        status: '완료',
+        createdAt: new Date().toISOString(),
+        userId: 'system',
+        userName: '시스템',
+        userEmail: 'system@mnastation.com',
+        isDummy: true,
+        company_name: item.name
+      }));
+
+      const sellersDummyApplications = sellersDummy.map(item => ({
+        ...item,
+        type: 'seller',
+        status: '완료',
+        createdAt: new Date().toISOString(),
+        userId: 'system',
+        userName: '시스템',
+        userEmail: 'system@mnastation.com',
+        isDummy: true,
+        company_name: item.name
+      }));
+
+      // 기존 더미데이터가 없으면 추가
+      const existingDummy = applications.filter(a => a.isDummy);
+      if (existingDummy.length === 0) {
+        applications = [...applications, ...buyersDummyApplications, ...sellersDummyApplications];
+        localStorage.setItem('mna_station_applications', JSON.stringify(applications));
+        
+        // listings 데이터에도 추가
+        const buyersListings = JSON.parse(localStorage.getItem('mna_station_buyers_listings') || '[]');
+        const sellersListings = JSON.parse(localStorage.getItem('mna_station_sellers_listings') || '[]');
+        
+        buyersDummy.forEach(item => {
+          if (!buyersListings.find(l => l.id === item.id)) {
+            buyersListings.push({...item, isNew: false});
+          }
+        });
+        
+        sellersDummy.forEach(item => {
+          if (!sellersListings.find(l => l.id === item.id)) {
+            sellersListings.push({...item, isNew: false});
+          }
+        });
+        
+        localStorage.setItem('mna_station_buyers_listings', JSON.stringify(buyersListings));
+        localStorage.setItem('mna_station_sellers_listings', JSON.stringify(sellersListings));
+        
+        alert('기존 더미데이터가 관리 시스템에 추가되었습니다.');
+        loadApplications();
+      } else {
+        alert('더미데이터는 이미 관리 시스템에 등록되어 있습니다.');
+      }
+    }
+
+    // 검색 입력 필드에서 Enter 키 처리
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        applyFilters();
+      }
+    });
+
+    // 초기 로드
+    loadApplications();
+  </script>
+</body>
+</html>
+

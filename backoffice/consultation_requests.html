@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상담 신청 관리 - M&A STATION</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #4db7ff;
+    }
+
+    .filter-section {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filter-group label {
+      font-size: 14px;
+      color: #666;
+      white-space: nowrap;
+    }
+
+    .filter-group select,
+    .filter-group input {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .filter-group input {
+      min-width: 200px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #4db7ff;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1f6fe5;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    thead {
+      background: #f8f9fa;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    th {
+      font-weight: 600;
+      color: #333;
+      font-size: 14px;
+    }
+
+    td {
+      font-size: 13px;
+      color: #666;
+    }
+
+    tbody tr:hover {
+      background: #f8f9fa;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-waiting {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-processing {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+
+    .status-completed {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-cancelled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .type-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      background: #e9ecef;
+      color: #495057;
+    }
+
+    .type-buyer {
+      background: #cfe2ff;
+      color: #084298;
+    }
+
+    .type-seller {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .modal-close:hover {
+      color: #333;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .info-row {
+      display: flex;
+      margin-bottom: 15px;
+    }
+
+    .info-label {
+      width: 120px;
+      font-weight: 600;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .info-value {
+      flex: 1;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 20px;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      padding: 6px 12px;
+      border: 1px solid #ddd;
+      background: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .pagination button:hover {
+      background: #f8f9fa;
+    }
+
+    .pagination button.active {
+      background: #4db7ff;
+      color: white;
+      border-color: #4db7ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>상담 신청 관리</h1>
+
+    <div class="filter-section">
+      <div class="filter-group">
+        <label>상태:</label>
+        <select id="statusFilter">
+          <option value="">전체</option>
+          <option value="대기중">대기중</option>
+          <option value="처리중">처리중</option>
+          <option value="완료">완료</option>
+          <option value="취소">취소</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>유형:</label>
+        <select id="typeFilter">
+          <option value="">전체</option>
+          <option value="buyer">매수</option>
+          <option value="seller">매도</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>검색:</label>
+        <input type="text" id="searchInput" placeholder="기업명, 회원명, 이메일 검색">
+      </div>
+      <button class="btn btn-primary" onclick="applyFilters()">필터 적용</button>
+      <button class="btn btn-secondary" onclick="resetFilters()">초기화</button>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>신청 ID</th>
+            <th>신청일시</th>
+            <th>회원명</th>
+            <th>이메일</th>
+            <th>기업명</th>
+            <th>유형</th>
+            <th>상태</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody id="consultationTableBody">
+          <!-- 동적으로 생성됨 -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="emptyState" class="empty-state" style="display: none;">
+      <div class="empty-state-icon">📋</div>
+      <div>상담 신청 내역이 없습니다.</div>
+    </div>
+  </div>
+
+  <!-- 상세 정보 모달 -->
+  <div id="detailModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">상담 신청 상세 정보</div>
+        <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="detailModalBody">
+        <!-- 동적으로 생성됨 -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeDetailModal()">닫기</button>
+        <button class="btn btn-primary" id="updateStatusBtn" onclick="updateStatus()">상태 변경</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let consultations = [];
+    let filteredConsultations = [];
+    let currentConsultation = null;
+
+    // LocalStorage에서 상담 신청 데이터 로드
+    function loadConsultations() {
+      const data = localStorage.getItem('mna_station_consultations');
+      consultations = data ? JSON.parse(data) : [];
+      filteredConsultations = [...consultations];
+      renderTable();
+    }
+
+    // 테이블 렌더링
+    function renderTable() {
+      const tbody = document.getElementById('consultationTableBody');
+      const emptyState = document.getElementById('emptyState');
+
+      if (filteredConsultations.length === 0) {
+        tbody.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      
+      // 최신순으로 정렬
+      const sorted = [...filteredConsultations].sort((a, b) => 
+        new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      tbody.innerHTML = sorted.map(cons => {
+        const date = new Date(cons.createdAt);
+        const dateStr = date.toLocaleDateString('ko-KR') + ' ' + 
+                       date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+        
+        const statusClass = getStatusClass(cons.status);
+        const typeClass = cons.consultationType === 'buyer' ? 'type-buyer' : 'type-seller';
+        const typeText = cons.consultationType === 'buyer' ? '매수' : '매도';
+
+        return `
+          <tr>
+            <td>${cons.id}</td>
+            <td>${dateStr}</td>
+            <td>${cons.userName}</td>
+            <td>${cons.userEmail}</td>
+            <td>${cons.companyName}</td>
+            <td><span class="type-badge ${typeClass}">${typeText}</span></td>
+            <td><span class="status-badge ${statusClass}">${cons.status}</span></td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-primary btn-sm" onclick="showDetail('${cons.id}')">상세</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteConsultation('${cons.id}')">삭제</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function getStatusClass(status) {
+      const statusMap = {
+        '대기중': 'status-waiting',
+        '처리중': 'status-processing',
+        '완료': 'status-completed',
+        '취소': 'status-cancelled'
+      };
+      return statusMap[status] || 'status-waiting';
+    }
+
+    // 필터 적용
+    function applyFilters() {
+      const statusFilter = document.getElementById('statusFilter').value;
+      const typeFilter = document.getElementById('typeFilter').value;
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+      filteredConsultations = consultations.filter(cons => {
+        const matchStatus = !statusFilter || cons.status === statusFilter;
+        const matchType = !typeFilter || cons.consultationType === typeFilter;
+        const matchSearch = !searchTerm || 
+          cons.companyName.toLowerCase().includes(searchTerm) ||
+          cons.userName.toLowerCase().includes(searchTerm) ||
+          cons.userEmail.toLowerCase().includes(searchTerm);
+
+        return matchStatus && matchType && matchSearch;
+      });
+
+      renderTable();
+    }
+
+    // 필터 초기화
+    function resetFilters() {
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('typeFilter').value = '';
+      document.getElementById('searchInput').value = '';
+      filteredConsultations = [...consultations];
+      renderTable();
+    }
+
+    // 상세 정보 보기
+    function showDetail(id) {
+      currentConsultation = consultations.find(c => c.id === id);
+      if (!currentConsultation) return;
+
+      const modalBody = document.getElementById('detailModalBody');
+      const date = new Date(currentConsultation.createdAt);
+      const dateStr = date.toLocaleDateString('ko-KR') + ' ' + 
+                     date.toLocaleTimeString('ko-KR');
+
+      modalBody.innerHTML = `
+        <div class="info-row">
+          <div class="info-label">신청 ID:</div>
+          <div class="info-value">${currentConsultation.id}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">신청일시:</div>
+          <div class="info-value">${dateStr}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">회원명:</div>
+          <div class="info-value">${currentConsultation.userName}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">이메일:</div>
+          <div class="info-value">${currentConsultation.userEmail}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">기업 ID:</div>
+          <div class="info-value">${currentConsultation.companyId}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">기업명:</div>
+          <div class="info-value">${currentConsultation.companyName}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">기업 형태:</div>
+          <div class="info-value">${currentConsultation.companyType}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">업종:</div>
+          <div class="info-value">${currentConsultation.companyCategory}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">가격 범위:</div>
+          <div class="info-value">${currentConsultation.priceRange}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">자본금:</div>
+          <div class="info-value">${currentConsultation.capital}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">상담 유형:</div>
+          <div class="info-value">${currentConsultation.consultationType === 'buyer' ? '매수' : '매도'}</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">상태:</div>
+          <div class="info-value">
+            <select id="statusSelect" style="padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px;">
+              <option value="대기중" ${currentConsultation.status === '대기중' ? 'selected' : ''}>대기중</option>
+              <option value="처리중" ${currentConsultation.status === '처리중' ? 'selected' : ''}>처리중</option>
+              <option value="완료" ${currentConsultation.status === '완료' ? 'selected' : ''}>완료</option>
+              <option value="취소" ${currentConsultation.status === '취소' ? 'selected' : ''}>취소</option>
+            </select>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">신청 페이지:</div>
+          <div class="info-value">${currentConsultation.page}</div>
+        </div>
+      `;
+
+      document.getElementById('detailModal').classList.add('active');
+    }
+
+    // 상세 모달 닫기
+    function closeDetailModal() {
+      document.getElementById('detailModal').classList.remove('active');
+      currentConsultation = null;
+    }
+
+    // 상태 변경
+    function updateStatus() {
+      if (!currentConsultation) return;
+
+      const newStatus = document.getElementById('statusSelect').value;
+      const index = consultations.findIndex(c => c.id === currentConsultation.id);
+      
+      if (index !== -1) {
+        consultations[index].status = newStatus;
+        currentConsultation.status = newStatus;
+        localStorage.setItem('mna_station_consultations', JSON.stringify(consultations));
+        
+        applyFilters();
+        closeDetailModal();
+        alert('상태가 변경되었습니다.');
+      }
+    }
+
+    // 상담 신청 삭제
+    function deleteConsultation(id) {
+      if (!confirm('정말 삭제하시겠습니까?')) return;
+
+      consultations = consultations.filter(c => c.id !== id);
+      localStorage.setItem('mna_station_consultations', JSON.stringify(consultations));
+      
+      applyFilters();
+      alert('삭제되었습니다.');
+    }
+
+    // 검색 입력 필드에서 Enter 키 처리
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        applyFilters();
+      }
+    });
+
+    // 초기 로드
+    loadConsultations();
+  </script>
+</body>
+</html>
+

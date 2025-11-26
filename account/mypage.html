@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>마이페이지 - M&A STATION</title>
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/layout.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <style>
+      /* MyPage Specific Styles */
+      .mypage {
+        min-height: 100vh;
+        padding: var(--spacing-xxl);
+        padding-top: calc(var(--spacing-xxl) + 60px);
+        background: var(--bg-primary);
+        position: relative;
+        overflow: visible;
+      }
+
+      .mypage::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(circle at 20% 50%, rgba(77, 183, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(77, 183, 255, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .mypage-container {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .mypage-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-xxl);
+        flex-wrap: wrap;
+        gap: var(--spacing-lg);
+      }
+
+      .mypage-header h1 {
+        font-size: 32px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.5px;
+      }
+
+      .user-profile-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-light);
+        border-radius: 16px;
+        padding: var(--spacing-xxl);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        margin-bottom: var(--spacing-xxl);
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xl);
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .user-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(77, 183, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        color: var(--accent-primary);
+        border: 2px solid rgba(77, 183, 255, 0.3);
+        flex-shrink: 0;
+      }
+
+      .user-info h2 {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .user-info p {
+        font-size: var(--font-size-small);
+        color: var(--text-muted);
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .user-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: var(--font-size-xs);
+        font-weight: 600;
+        background: rgba(77, 183, 255, 0.2);
+        color: var(--accent-primary);
+        margin-top: var(--spacing-xs);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xxl);
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: var(--spacing-xl);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        transition: all var(--transition-fast);
+        cursor: pointer;
+      }
+
+      .stat-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--accent-primary);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(77, 183, 255, 0.2);
+      }
+
+      .stat-card-icon {
+        font-size: 32px;
+        margin-bottom: var(--spacing-md);
+        opacity: 0.8;
+      }
+
+      .stat-card-value {
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--accent-primary);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .stat-card-label {
+        font-size: var(--font-size-small);
+        color: var(--text-muted);
+      }
+
+      .content-section {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-light);
+        border-radius: 16px;
+        padding: var(--spacing-xxl);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .section-header h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .section-link {
+        color: var(--accent-primary);
+        text-decoration: none;
+        font-size: var(--font-size-small);
+        transition: opacity var(--transition-fast);
+      }
+
+      .section-link:hover {
+        opacity: 0.8;
+      }
+
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--spacing-md);
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+        padding: var(--spacing-lg);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        text-decoration: none;
+        color: var(--text-primary);
+        transition: all var(--transition-fast);
+        cursor: pointer;
+      }
+
+      .menu-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--accent-primary);
+        transform: translateX(4px);
+      }
+
+      .menu-item-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(77, 183, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: var(--accent-primary);
+        flex-shrink: 0;
+      }
+
+      .menu-item-content {
+        flex: 1;
+      }
+
+      .menu-item-title {
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .menu-item-desc {
+        font-size: var(--font-size-xs);
+        color: var(--text-muted);
+      }
+
+      .menu-item-arrow {
+        color: var(--text-muted);
+        font-size: 18px;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: var(--spacing-md);
+        flex-wrap: wrap;
+      }
+
+      .action-btn {
+        padding: 12px 24px;
+        background: rgba(77, 183, 255, 0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(77, 183, 255, 0.3);
+        border-radius: 12px;
+        color: var(--accent-primary);
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        box-shadow: 0 4px 12px rgba(77, 183, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .action-btn:hover {
+        background: rgba(77, 183, 255, 0.3);
+        border-color: rgba(77, 183, 255, 0.4);
+        box-shadow: 0 6px 16px rgba(77, 183, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        transform: translateY(-1px);
+      }
+
+      .action-btn.secondary {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.18);
+        color: var(--text-primary);
+      }
+
+      .action-btn.secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .back-link {
+        position: absolute;
+        top: var(--spacing-xl);
+        left: var(--spacing-xl);
+        z-index: 10;
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: var(--font-size-small);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        opacity: 0.8;
+        transition: opacity var(--transition-fast);
+      }
+
+      .back-link:hover {
+        opacity: 1;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: var(--spacing-xxl);
+        color: var(--text-muted);
+      }
+
+      .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: var(--spacing-md);
+        opacity: 0.5;
+      }
+
+      /* Edit Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing-xl);
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-light);
+        border-radius: 16px;
+        padding: var(--spacing-xxl);
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .modal-header h2 {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all var(--transition-fast);
+      }
+
+      .modal-close:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+      }
+
+      .modal-body {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+
+      .form-group label {
+        font-size: var(--font-size-small);
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-size: var(--font-size-base);
+        transition: all var(--transition-fast);
+        box-sizing: border-box;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 0 3px rgba(77, 183, 255, 0.1);
+      }
+
+      .form-group select option {
+        background: var(--bg-menu);
+        color: var(--text-primary);
+      }
+
+      .modal-footer {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-xl);
+      }
+
+      .modal-btn {
+        flex: 1;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        border: none;
+      }
+
+      .modal-btn.primary {
+        background: rgba(77, 183, 255, 0.2);
+        border: 1px solid rgba(77, 183, 255, 0.3);
+        color: var(--accent-primary);
+      }
+
+      .modal-btn.primary:hover {
+        background: rgba(77, 183, 255, 0.3);
+        border-color: rgba(77, 183, 255, 0.4);
+      }
+
+      .modal-btn.secondary {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: var(--text-primary);
+      }
+
+      .modal-btn.secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      @media (max-width: 768px) {
+        .mypage {
+          padding: var(--spacing-lg);
+          padding-top: calc(var(--spacing-lg) + 50px);
+        }
+
+        .mypage-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .user-profile {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .menu-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+        }
+
+        .action-btn {
+          width: 100%;
+          text-align: center;
+        }
+
+        .back-link {
+          top: var(--spacing-md);
+          left: var(--spacing-md);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a href="../index.html" class="back-link">← 홈으로</a>
+    
+    <div class="mypage">
+      <div class="mypage-container">
+        <div class="mypage-header">
+          <h1>마이페이지</h1>
+          <div class="action-buttons">
+            <button onclick="openEditModal()" class="action-btn secondary">정보 수정</button>
+            <button onclick="logout()" class="action-btn">로그아웃</button>
+          </div>
+        </div>
+
+        <!-- 사용자 프로필 카드 -->
+        <div class="user-profile-card">
+          <div class="user-profile">
+            <div class="user-avatar" id="userAvatar">👤</div>
+            <div class="user-info">
+              <h2 id="userName">사용자 이름</h2>
+              <p id="userEmail">user@example.com</p>
+              <p id="userPhone">010-0000-0000</p>
+              <span class="user-badge" id="userBadge">일반 회원</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 통계 카드 -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-icon">📋</div>
+            <div class="stat-card-value" id="totalApplications">0</div>
+            <div class="stat-card-label">총 신청 건수</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">⭐</div>
+            <div class="stat-card-value" id="favoriteCount">0</div>
+            <div class="stat-card-label">관심 기업</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">💼</div>
+            <div class="stat-card-value" id="activeDeals">0</div>
+            <div class="stat-card-label">진행 중인 거래</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">✅</div>
+            <div class="stat-card-value" id="completedDeals">0</div>
+            <div class="stat-card-label">완료된 거래</div>
+          </div>
+        </div>
+
+        <!-- 빠른 메뉴 -->
+        <div class="content-section">
+          <div class="section-header">
+            <h3>빠른 메뉴</h3>
+          </div>
+          <div class="menu-grid">
+            <a href="../listings/sellers.html" class="menu-item">
+              <div class="menu-item-icon">🏢</div>
+              <div class="menu-item-content">
+                <div class="menu-item-title">매도기업 현황</div>
+                <div class="menu-item-desc">매각을 고려하는 기업 리스트</div>
+              </div>
+              <div class="menu-item-arrow">›</div>
+            </a>
+            <a href="../listings/buyers.html" class="menu-item">
+              <div class="menu-item-icon">💼</div>
+              <div class="menu-item-content">
+                <div class="menu-item-title">매수기업 현황</div>
+                <div class="menu-item-desc">인수 타깃을 탐색하는 기업 리스트</div>
+              </div>
+              <div class="menu-item-arrow">›</div>
+            </a>
+            <a href="#applications" class="menu-item">
+              <div class="menu-item-icon">📝</div>
+              <div class="menu-item-content">
+                <div class="menu-item-title">나의 신청 내역</div>
+                <div class="menu-item-desc">M&A 신청 및 등록 내역 확인</div>
+              </div>
+              <div class="menu-item-arrow">›</div>
+            </a>
+            <a href="#favorites" class="menu-item">
+              <div class="menu-item-icon">⭐</div>
+              <div class="menu-item-content">
+                <div class="menu-item-title">관심 기업</div>
+                <div class="menu-item-desc">저장한 기업 목록</div>
+              </div>
+              <div class="menu-item-arrow">›</div>
+            </a>
+            <a href="#consultation" class="menu-item">
+              <div class="menu-item-icon">💬</div>
+              <div class="menu-item-content">
+                <div class="menu-item-title">상담 내역</div>
+                <div class="menu-item-desc">상담 문의 및 답변 확인</div>
+              </div>
+              <div class="menu-item-arrow">›</div>
+            </a>
+            <a href="#settings" class="menu-item">
+              <div class="menu-item-icon">⚙️</div>
+              <div class="menu-item-content">
+                <div class="menu-item-title">설정</div>
+                <div class="menu-item-desc">계정 설정 및 알림 관리</div>
+              </div>
+              <div class="menu-item-arrow">›</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- 최근 활동 -->
+        <div class="content-section">
+          <div class="section-header">
+            <h3>최근 활동</h3>
+            <a href="#all" class="section-link">전체보기 →</a>
+          </div>
+          <div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <div>최근 활동 내역이 없습니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 현재 사용자 정보 로드
+      function loadUserInfo() {
+        const LOGIN_STATE_KEY = 'mna_station_current_user';
+        const currentUserData = localStorage.getItem(LOGIN_STATE_KEY);
+        
+        if (currentUserData) {
+          const user = JSON.parse(currentUserData);
+          
+          document.getElementById('userName').textContent = user.name || '사용자';
+          document.getElementById('userEmail').textContent = user.email || '이메일 없음';
+          document.getElementById('userPhone').textContent = user.phone || '전화번호 없음';
+          
+          // 가입 방식에 따른 배지
+          if (user.provider) {
+            document.getElementById('userBadge').textContent = user.provider.toUpperCase() + ' 회원';
+          } else {
+            document.getElementById('userBadge').textContent = '일반 회원';
+          }
+          
+          // 아바타 초기 (이름의 첫 글자)
+          const firstChar = (user.name || 'U').charAt(0).toUpperCase();
+          document.getElementById('userAvatar').textContent = firstChar;
+          
+          // 전역 변수에 저장 (수정 시 사용)
+          window.currentUser = user;
+        } else {
+          // 로그인하지 않은 경우
+          document.getElementById('userName').textContent = '게스트';
+          document.getElementById('userEmail').textContent = '로그인이 필요합니다';
+          document.getElementById('userPhone').textContent = '-';
+          alert('로그인이 필요합니다.');
+          window.location.href = '../account/login.html';
+        }
+      }
+
+      // 정보 수정 모달 열기
+      function openEditModal() {
+        if (!window.currentUser) {
+          alert('로그인이 필요합니다.');
+          window.location.href = '../account/login.html';
+          return;
+        }
+        
+        const modal = document.getElementById('editModal');
+        const user = window.currentUser;
+        
+        // 폼에 현재 정보 채우기
+        document.getElementById('editName').value = user.name || '';
+        document.getElementById('editEmail').value = user.email || '';
+        document.getElementById('editPhone').value = user.phone || '';
+        document.getElementById('editCompanyType').value = user.companyType || '';
+        document.getElementById('editCompanyName').value = user.companyName || '';
+        
+        modal.classList.add('active');
+      }
+
+      // 정보 수정 모달 닫기
+      function closeEditModal() {
+        document.getElementById('editModal').classList.remove('active');
+      }
+
+      // 정보 수정 저장
+      function saveUserInfo() {
+        const MEMBERS_STORAGE_KEY = 'mna_station_members';
+        const LOGIN_STATE_KEY = 'mna_station_current_user';
+        
+        if (!window.currentUser) return;
+        
+        const updatedData = {
+          name: document.getElementById('editName').value,
+          email: document.getElementById('editEmail').value,
+          phone: document.getElementById('editPhone').value,
+          companyType: document.getElementById('editCompanyType').value,
+          companyName: document.getElementById('editCompanyName').value
+        };
+        
+        // 회원 목록에서 업데이트
+        const members = JSON.parse(localStorage.getItem(MEMBERS_STORAGE_KEY) || '[]');
+        const memberIndex = members.findIndex(m => m.id === window.currentUser.id);
+        
+        if (memberIndex !== -1) {
+          members[memberIndex] = {
+            ...members[memberIndex],
+            ...updatedData
+          };
+          localStorage.setItem(MEMBERS_STORAGE_KEY, JSON.stringify(members));
+        }
+        
+        // 현재 로그인 사용자 정보도 업데이트
+        const currentUser = JSON.parse(localStorage.getItem(LOGIN_STATE_KEY) || '{}');
+        const updatedCurrentUser = {
+          ...currentUser,
+          ...updatedData
+        };
+        localStorage.setItem(LOGIN_STATE_KEY, JSON.stringify(updatedCurrentUser));
+        window.currentUser = updatedCurrentUser;
+        
+        // 화면 새로고침
+        loadUserInfo();
+        closeEditModal();
+        alert('정보가 수정되었습니다.');
+      }
+
+      // 통계 데이터 로드 (예시)
+      function loadStats() {
+        // 실제로는 서버에서 데이터를 가져와야 함
+        // 여기서는 예시 데이터 사용
+        document.getElementById('totalApplications').textContent = '0';
+        document.getElementById('favoriteCount').textContent = '0';
+        document.getElementById('activeDeals').textContent = '0';
+        document.getElementById('completedDeals').textContent = '0';
+      }
+
+      // 로그아웃
+      function logout() {
+        if (confirm('로그아웃 하시겠습니까?')) {
+          localStorage.removeItem('mna_station_current_user');
+          window.location.href = '../account/login.html';
+        }
+      }
+
+      // 모달 외부 클릭 시 닫기
+      document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('editModal');
+        if (modal) {
+          modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+              closeEditModal();
+            }
+          });
+        }
+      });
+
+      // 초기화
+      loadUserInfo();
+      loadStats();
+    </script>
+
+    <!-- 정보 수정 모달 -->
+    <div class="modal" id="editModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>정보 수정</h2>
+          <button class="modal-close" onclick="closeEditModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="editName">이름</label>
+            <input type="text" id="editName" required />
+          </div>
+          <div class="form-group">
+            <label for="editEmail">이메일</label>
+            <input type="email" id="editEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="editPhone">전화번호</label>
+            <input type="tel" id="editPhone" placeholder="010-0000-0000" />
+          </div>
+          <div class="form-group">
+            <label for="editCompanyType">기업형태</label>
+            <select id="editCompanyType">
+              <option value="">선택하세요</option>
+              <option value="small">중소기업</option>
+              <option value="medium">중견기업</option>
+              <option value="large">대기업</option>
+              <option value="startup">스타트업</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="editCompanyName">회사명</label>
+            <input type="text" id="editCompanyName" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn secondary" onclick="closeEditModal()">취소</button>
+          <button class="modal-btn primary" onclick="saveUserInfo()">저장</button>
+        </div>
+      </div>
+    </div>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/menu.js"></script>
+  </body>
+</html>

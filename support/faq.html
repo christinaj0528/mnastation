@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko" class="fullpage">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>자주 묻는 질문 - M&A STATION</title>
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/layout.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <style>
+      .board-page {
+        min-height: 100vh;
+        padding: var(--spacing-xxl);
+        padding-top: calc(var(--spacing-xxl) + 60px);
+        background: var(--bg-primary);
+        position: relative;
+        overflow: visible;
+      }
+
+      .board-page::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(circle at 20% 50%, rgba(77, 183, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(77, 183, 255, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .board-container {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: var(--spacing-xxl);
+      }
+
+      .page-header h1 {
+        font-size: 36px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-sm);
+        letter-spacing: -0.5px;
+      }
+
+      .page-header p {
+        font-size: var(--font-size-base);
+        color: var(--text-muted);
+        opacity: 0.8;
+      }
+
+      .faq-categories {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-xl);
+        flex-wrap: wrap;
+      }
+
+      .faq-category {
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-light);
+        border-radius: 20px;
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        font-size: var(--font-size-small);
+      }
+
+      .faq-category:hover,
+      .faq-category.active {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        color: white;
+      }
+
+      .faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+      }
+
+      .faq-item {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all var(--transition-fast);
+      }
+
+      .faq-item.active {
+        border-color: var(--accent-primary);
+        box-shadow: 0 4px 16px rgba(77, 183, 255, 0.2);
+      }
+
+      .faq-question {
+        padding: var(--spacing-lg);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .faq-question:hover {
+        background: rgba(77, 183, 255, 0.05);
+      }
+
+      .faq-icon {
+        transition: transform var(--transition-fast);
+        font-size: 20px;
+        color: var(--accent-primary);
+      }
+
+      .faq-item.active .faq-icon {
+        transform: rotate(180deg);
+      }
+
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height var(--transition-normal);
+        padding: 0 var(--spacing-lg);
+        color: var(--text-muted);
+        line-height: 1.8;
+      }
+
+      .faq-item.active .faq-answer {
+        max-height: 1000px;
+        padding: 0 var(--spacing-lg) var(--spacing-lg);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: var(--spacing-xxl);
+        color: var(--text-muted);
+      }
+
+      .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: var(--spacing-md);
+      }
+
+      .search-box {
+        margin-bottom: var(--spacing-xl);
+        position: relative;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding: 12px 16px;
+        padding-left: 40px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-size: var(--font-size-base);
+        transition: all var(--transition-fast);
+      }
+
+      .search-box input:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 0 3px rgba(77, 183, 255, 0.1);
+      }
+
+      .search-box::before {
+        content: '🔍';
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        opacity: 0.6;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="../index.html" class="brand" style="text-decoration: none; color: inherit;">M&A STATION</a>
+      <div class="top-actions">
+        <button id="menuToggle" class="hamburger" aria-label="메뉴 열기">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <aside class="menu-panel" id="menuPanel" aria-hidden="true"></aside>
+    <a href="../index.html" class="back-link">← 홈으로</a>
+    
+    <div class="board-page">
+      <div class="board-container">
+        <div class="page-header">
+          <h1>자주 묻는 질문</h1>
+          <p>M&A STATION 이용에 대한 자주 묻는 질문과 답변</p>
+        </div>
+
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="질문 검색..." onkeyup="handleSearch(event)">
+        </div>
+
+        <div class="faq-categories" id="faqCategories"></div>
+
+        <div class="faq-list" id="faqList">
+          <div class="empty-state">
+            <div class="empty-state-icon">❓</div>
+            <div>등록된 FAQ가 없습니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const FAQ_STORAGE_KEY = 'mna_station_faqs';
+      let allFaqs = [];
+      let filteredFaqs = [];
+      let selectedCategory = '전체';
+
+      function loadFaqs() {
+        allFaqs = JSON.parse(localStorage.getItem(FAQ_STORAGE_KEY) || '[]');
+        allFaqs.sort((a, b) => (a.order || 0) - (b.order || 0));
+        filteredFaqs = [...allFaqs];
+        renderCategories();
+        renderFaqs();
+      }
+
+      function renderCategories() {
+        const categories = ['전체', ...new Set(allFaqs.map(faq => faq.category).filter(Boolean))];
+        const container = document.getElementById('faqCategories');
+        container.innerHTML = categories.map(cat => `
+          <div class="faq-category ${cat === selectedCategory ? 'active' : ''}" onclick="filterByCategory('${cat}')">
+            ${cat}
+          </div>
+        `).join('');
+      }
+
+      function filterByCategory(category) {
+        selectedCategory = category;
+        if (category === '전체') {
+          filteredFaqs = [...allFaqs];
+        } else {
+          filteredFaqs = allFaqs.filter(faq => faq.category === category);
+        }
+        renderCategories();
+        renderFaqs();
+      }
+
+      function renderFaqs() {
+        const container = document.getElementById('faqList');
+        
+        if (filteredFaqs.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">❓</div>
+              <div>등록된 FAQ가 없습니다.</div>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = filteredFaqs.map((faq, index) => `
+          <div class="faq-item" onclick="toggleFaq(${index})">
+            <div class="faq-question">
+              <span>Q. ${faq.question}</span>
+              <span class="faq-icon">▼</span>
+            </div>
+            <div class="faq-answer">
+              ${faq.answer || ''}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function toggleFaq(index) {
+        const items = document.querySelectorAll('.faq-item');
+        const item = items[index];
+        const isActive = item.classList.contains('active');
+        
+        items.forEach(i => i.classList.remove('active'));
+        if (!isActive) {
+          item.classList.add('active');
+        }
+      }
+
+      function handleSearch(event) {
+        const searchTerm = event.target.value.toLowerCase();
+        if (searchTerm === '') {
+          if (selectedCategory === '전체') {
+            filteredFaqs = [...allFaqs];
+          } else {
+            filteredFaqs = allFaqs.filter(faq => faq.category === selectedCategory);
+          }
+        } else {
+          filteredFaqs = allFaqs.filter(faq => 
+            (faq.question && faq.question.toLowerCase().includes(searchTerm)) ||
+            (faq.answer && faq.answer.toLowerCase().includes(searchTerm))
+          );
+        }
+        renderFaqs();
+      }
+
+      loadFaqs();
+    </script>
+    
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/menu.js"></script>
+    
+    <nav class="bottom-tabs">
+      <div class="tab-item" data-index="0" onclick="window.location.href='../index.html'">
+        <div class="icon">🏠</div>
+        <div class="label">홈</div>
+      </div>
+      <div class="tab-item" data-index="1" onclick="window.location.href='../listings/sellers.html'">
+        <div class="icon">📝</div>
+        <div class="label">등록</div>
+      </div>
+      <div class="tab-item" data-index="3" onclick="window.location.href='../insights/cases.html'">
+        <div class="icon">📊</div>
+        <div class="label">인사이트</div>
+      </div>
+      <div class="tab-item" data-index="4" onclick="window.location.href='consult.html'">
+        <div class="icon">💬</div>
+        <div class="label">상담</div>
+      </div>
+      <div class="tab-item active" data-index="5" onclick="window.location.href='faq.html'">
+        <div class="icon">👤</div>
+        <div class="label">마이페이지</div>
+      </div>
+    </nav>
+</body>
+</html>

@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>M&A STATION | 매도기업 현황</title>
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/layout.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <!-- ⚠️ 중요: 헤더와 하단탭은 필수 요소입니다. 삭제하지 마세요! -->
+    <style>
+      body, html {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+      }
+
+      .page-content {
+        min-height: calc(100vh - var(--header-height-mobile) - 70px);
+        padding-bottom: 80px;
+        overflow-y: auto;
+      }
+
+      .slider-container {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: var(--spacing-lg) var(--spacing-md);
+      }
+
+      .slider-header {
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .slider-title {
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-sm);
+        letter-spacing: -0.5px;
+      }
+
+      .slider-subtitle {
+        font-size: var(--font-size-base);
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      .list-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: var(--spacing-lg);
+        padding: 0;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .list-item {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-light);
+        border-radius: 16px;
+        padding: var(--spacing-xl);
+        cursor: pointer;
+        transition: all var(--transition-normal);
+        text-decoration: none;
+        color: var(--text-primary);
+        display: block;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .list-item:hover {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--accent-primary);
+        box-shadow: 0 8px 24px rgba(77, 183, 255, 0.2);
+      }
+
+      /* 모달 스타일 */
+      .company-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+        overflow-y: auto;
+        padding: var(--spacing-lg);
+        box-sizing: border-box;
+      }
+
+      .company-modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: rgba(20, 20, 20, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-light);
+        border-radius: 20px;
+        padding: var(--spacing-xxl);
+        max-width: 700px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        position: relative;
+        animation: modalFadeIn 0.3s ease;
+      }
+
+      @keyframes modalFadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: var(--spacing-xl);
+        padding-bottom: var(--spacing-lg);
+        border-bottom: 1px solid var(--border-light);
+      }
+
+      .modal-title-section {
+        flex: 1;
+      }
+
+      .modal-company-id {
+        font-size: var(--font-size-small);
+        color: var(--text-muted);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .modal-company-name {
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .modal-status {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: var(--font-size-xs);
+        font-weight: 500;
+        margin-top: var(--spacing-xs);
+      }
+
+      .modal-close {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 28px;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all var(--transition-fast);
+      }
+
+      .modal-close:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+      }
+
+      .modal-body {
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .modal-info-section {
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .modal-info-title {
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-md);
+        padding-bottom: var(--spacing-xs);
+        border-bottom: 1px solid var(--border-light);
+      }
+
+      .modal-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+      }
+
+      .modal-info-item {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+      }
+
+      .modal-info-label {
+        font-size: var(--font-size-xs);
+        color: var(--text-muted);
+      }
+
+      .modal-info-value {
+        font-size: var(--font-size-base);
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .modal-description {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: var(--spacing-lg);
+        margin-top: var(--spacing-md);
+        line-height: 1.6;
+        color: var(--text-primary);
+      }
+
+      .modal-footer {
+        display: flex;
+        gap: var(--spacing-md);
+        justify-content: flex-end;
+        padding-top: var(--spacing-lg);
+        border-top: 1px solid var(--border-light);
+      }
+
+      .modal-btn {
+        padding: 12px 24px;
+        border-radius: 8px;
+        border: none;
+        font-size: var(--font-size-base);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+      }
+
+      .modal-btn-primary {
+        background: linear-gradient(120deg, #4db7ff, #1f6fe5);
+        color: #081627;
+      }
+
+      .modal-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(77, 183, 255, 0.4);
+      }
+
+      .modal-btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+      }
+
+      .modal-btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      @media (max-width: 768px) {
+        .company-modal {
+          padding: var(--spacing-md);
+        }
+
+        .modal-content {
+          padding: var(--spacing-lg);
+          max-height: 95vh;
+        }
+
+        .modal-company-name {
+          font-size: 22px;
+        }
+
+        .modal-info-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .modal-footer {
+          flex-direction: column;
+        }
+
+        .modal-btn {
+          width: 100%;
+        }
+      }
+
+      .item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: var(--spacing-md);
+        flex-wrap: wrap;
+        gap: var(--spacing-xs);
+      }
+
+      .item-id {
+        font-size: var(--font-size-xs);
+        color: var(--text-nav);
+        font-weight: 600;
+      }
+
+      .item-category {
+        display: inline-block;
+        padding: 6px 14px;
+        background: var(--accent-bg);
+        color: var(--accent-primary);
+        font-size: var(--font-size-xs);
+        font-weight: 600;
+        border-radius: 12px;
+        white-space: nowrap;
+      }
+
+      /* 매칭 상태 색상 */
+      .item-category.status-waiting {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+      }
+
+      .item-category.status-matching {
+        background: rgba(77, 183, 255, 0.2);
+        color: #4db7ff;
+      }
+
+      .item-category.status-closed {
+        background: rgba(158, 158, 158, 0.2);
+        color: #9e9e9e;
+      }
+
+      .item-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: var(--spacing-md);
+        line-height: 1.4;
+        color: var(--text-primary);
+      }
+
+      .item-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
+      }
+
+      .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .info-label {
+        font-size: var(--font-size-xs);
+        color: var(--text-muted);
+        opacity: 0.8;
+        font-weight: 500;
+      }
+
+      .info-value {
+        font-size: var(--font-size-small);
+        font-weight: 600;
+        color: var(--text-primary);
+        word-break: break-word;
+      }
+
+      .loading {
+        text-align: center;
+        padding: var(--spacing-xxl);
+        color: var(--text-muted);
+        display: none;
+        font-size: var(--font-size-small);
+      }
+
+      .loading.active {
+        display: block;
+      }
+
+      /* 모바일 최적화 */
+      @media (max-width: 768px) {
+        .page-content {
+          padding-top: calc(var(--header-height-mobile) + var(--spacing-md));
+          padding-bottom: calc(80px + var(--spacing-md));
+        }
+
+        .slider-container {
+          padding: var(--spacing-md) var(--spacing-sm);
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .slider-header {
+          margin-bottom: var(--spacing-lg);
+          padding: 0 var(--spacing-xs);
+        }
+
+        .slider-title {
+          font-size: 22px;
+          margin-bottom: var(--spacing-xs);
+        }
+
+        .slider-subtitle {
+          font-size: 14px;
+          line-height: 1.5;
+        }
+
+        .list-container {
+          grid-template-columns: 1fr;
+          gap: var(--spacing-lg);
+          padding: 0;
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .list-item {
+          padding: var(--spacing-xl);
+          border-radius: 16px;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        .item-header {
+          margin-bottom: var(--spacing-md);
+        }
+
+        .item-id {
+          font-size: var(--font-size-xs);
+        }
+
+        .item-category {
+          padding: 6px 14px;
+          font-size: var(--font-size-xs);
+        }
+
+        .item-title {
+          font-size: 1.25rem;
+          margin-bottom: var(--spacing-md);
+        }
+
+        .item-info-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: var(--spacing-md);
+          margin-bottom: var(--spacing-md);
+        }
+
+        .info-item {
+          gap: 6px;
+          padding: 0;
+          border-bottom: none;
+        }
+
+        .info-label {
+          font-size: var(--font-size-xs);
+        }
+
+        .info-value {
+          font-size: var(--font-size-small);
+        }
+
+        .loading {
+          padding: var(--spacing-xl);
+          font-size: 13px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .slider-container {
+          padding: var(--spacing-md) var(--spacing-xs);
+        }
+
+        .slider-header {
+          padding: 0;
+        }
+
+        .slider-title {
+          font-size: 20px;
+        }
+
+        .slider-subtitle {
+          font-size: 13px;
+        }
+
+        .list-container {
+          gap: var(--spacing-sm);
+        }
+
+        .list-item {
+          padding: var(--spacing-md);
+          width: 100%;
+        }
+
+        .item-title {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ⚠️ 중요: 헤더 시작 - 삭제하지 마세요! -->
+    <header class="top-bar">
+      <a href="../index.html" class="brand" style="text-decoration: none; color: inherit;">M&A STATION</a>
+      <div class="top-actions">
+        <button id="menuToggle" class="hamburger" aria-label="메뉴 열기">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 햄버거 메뉴는 menu.js에서 동적으로 생성됩니다 -->
+    <aside class="menu-panel" id="menuPanel" aria-hidden="true"></aside>
+    <!-- ⚠️ 중요: 헤더 끝 -->
+
+    <main class="page-content">
+      <div class="slider-container" style="max-width: 1400px; margin: 0 auto;">
+        <div class="slider-header">
+          <div>
+            <h1 class="slider-title">매도기업 현황</h1>
+            <p class="slider-subtitle">매각을 고려하는 기업들의 전체 리스트입니다. 스크롤하여 더 많은 기업을 확인할 수 있습니다.</p>
+          </div>
+        </div>
+        <div class="list-container" id="listContainer">
+          <!-- Items will be loaded here -->
+        </div>
+        <div class="loading" id="loading">로딩 중...</div>
+      </div>
+    </main>
+
+    <nav class="bottom-tabs">
+      <a href="../index.html" class="tab-item active" data-index="0">
+        <div class="icon">🏠</div>
+        <div class="label">홈</div>
+      </a>
+      <a href="../apply/apply_seller.html" class="tab-item" data-index="1">
+        <div class="icon">📝</div>
+        <div class="label">등록</div>
+      </a>
+      <a href="../insights/cases.html" class="tab-item" data-index="3">
+        <div class="icon">📊</div>
+        <div class="label">인사이트</div>
+      </a>
+      <a href="../index.html#s4" class="tab-item" data-index="4">
+        <div class="icon">💬</div>
+        <div class="label">상담</div>
+      </a>
+      <a href="../index.html#s5" class="tab-item" data-index="5">
+        <div class="icon">👤</div>
+        <div class="label">마이페이지</div>
+      </a>
+    </nav>
+
+    <script src="../assets/js/ui.js"></script>
+    <script>
+      // Dummy data for sellers - 희망매도액: 0~200억원 (20억 단위, 균등 분포)
+      // 자본금은 희망매도액의 3~10배 범위 내로 설정
+      // 관리번호: MN-2025-임의값 형식
+      let sellersData = [
+        { id: 'MN-2025-001', category: 'IT/소프트웨어', name: '글로벌 AI 스타트업', type: '중소기업', priceRange: '0~20억', capital: '2억원' },
+        { id: 'MN-2025-002', category: '제조업', name: '전자부품 제조사', type: '중견기업', priceRange: '0~20억', capital: '3억원' },
+        { id: 'MN-2025-003', category: '서비스업', name: '헬스케어 플랫폼', type: '중소기업', priceRange: '0~20억', capital: '2.5억원' },
+        { id: 'MN-2025-004', category: '유통/물류', name: '물류 솔루션 기업', type: '중견기업', priceRange: '20~40억', capital: '4억원' },
+        { id: 'MN-2025-005', category: 'IT/소프트웨어', name: '게임 개발 스튜디오', type: '중견기업', priceRange: '20~40억', capital: '5억원' },
+        { id: 'MN-2025-006', category: '금융/핀테크', name: '핀테크 스타트업', type: '중소기업', priceRange: '20~40억', capital: '4.5억원' },
+        { id: 'MN-2025-007', category: '교육/에듀테크', name: '온라인 교육 플랫폼', type: '중소기업', priceRange: '40~60억', capital: '6억원' },
+        { id: 'MN-2025-008', category: '제조업', name: '친환경 소재 제조사', type: '중견기업', priceRange: '40~60억', capital: '8억원' },
+        { id: 'MN-2025-009', category: '서비스업', name: '컨설팅 기업', type: '중소기업', priceRange: '40~60억', capital: '7억원' },
+        { id: 'MN-2025-010', category: 'IT/소프트웨어', name: '클라우드 서비스 기업', type: '중소기업', priceRange: '60~80억', capital: '9억원' },
+        { id: 'MN-2025-011', category: '제조업', name: '반도체 부품 제조사', type: '중견기업', priceRange: '60~80억', capital: '12억원' },
+        { id: 'MN-2025-012', category: '서비스업', name: '디지털 마케팅 대행사', type: '중소기업', priceRange: '60~80억', capital: '10억원' },
+        { id: 'MN-2025-013', category: '유통/물류', name: '전자상거래 플랫폼', type: '중소기업', priceRange: '80~100억', capital: '11억원' },
+        { id: 'MN-2025-014', category: 'IT/소프트웨어', name: '모바일 앱 개발사', type: '중소기업', priceRange: '80~100억', capital: '12억원' },
+        { id: 'MN-2025-015', category: '제조업', name: '바이오 의료기기 제조사', type: '중견기업', priceRange: '80~100억', capital: '15억원' },
+        { id: 'MN-2025-016', category: '서비스업', name: '부동산 플랫폼', type: '중소기업', priceRange: '100~120억', capital: '13억원' },
+        { id: 'MN-2025-017', category: '금융/핀테크', name: '암호화폐 거래소', type: '중소기업', priceRange: '100~120억', capital: '14억원' },
+        { id: 'MN-2025-018', category: '교육/에듀테크', name: '코딩 교육 플랫폼', type: '중소기업', priceRange: '100~120억', capital: '15억원' },
+        { id: 'MN-2025-019', category: '제조업', name: '전기차 배터리 제조사', type: '중견기업', priceRange: '120~140억', capital: '18억원' },
+        { id: 'MN-2025-020', category: 'IT/소프트웨어', name: '블록체인 솔루션 기업', type: '중소기업', priceRange: '120~140억', capital: '16억원' },
+        { id: 'MN-2025-021', category: '서비스업', name: '음식 배달 플랫폼', type: '중소기업', priceRange: '120~140억', capital: '17억원' },
+        { id: 'MN-2025-022', category: '유통/물류', name: '해외직구 대행 서비스', type: '중소기업', priceRange: '140~160억', capital: '18억원' },
+        { id: 'MN-2025-023', category: 'IT/소프트웨어', name: '인공지능 음성인식 기업', type: '중소기업', priceRange: '140~160억', capital: '20억원' },
+        { id: 'MN-2025-024', category: '제조업', name: '스마트홈 기기 제조사', type: '중소기업', priceRange: '140~160억', capital: '19억원' },
+        { id: 'MN-2025-025', category: '서비스업', name: '여행 예약 플랫폼', type: '중소기업', priceRange: '160~180억', capital: '20억원' },
+        { id: 'MN-2025-026', category: '금융/핀테크', name: 'P2P 금융 플랫폼', type: '중소기업', priceRange: '160~180억', capital: '22억원' },
+        { id: 'MN-2025-027', category: '교육/에듀테크', name: '온라인 학원 플랫폼', type: '중소기업', priceRange: '160~180억', capital: '21억원' },
+        { id: 'MN-2025-028', category: '제조업', name: '로봇 제조 기업', type: '중견기업', priceRange: '180~200억', capital: '25억원' },
+        { id: 'MN-2025-029', category: 'IT/소프트웨어', name: '사이버 보안 솔루션 기업', type: '중소기업', priceRange: '180~200억', capital: '23억원' },
+        { id: 'MN-2025-030', category: '서비스업', name: '공유경제 플랫폼', type: '중소기업', priceRange: '180~200억', capital: '24억원' }
+      ];
+
+      // 데이터 섞기 (Fisher-Yates shuffle 알고리즘)
+      function shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+      }
+
+      // LocalStorage에서 신규 등록 데이터 로드
+      const newSellersListings = JSON.parse(localStorage.getItem('mna_station_sellers_listings') || '[]');
+      
+      // 신규 등록 데이터를 최상단에 추가
+      sellersData = [...newSellersListings, ...sellersData];
+      
+      // 기존 더미데이터 섞기
+      const dummyData = sellersData.filter(item => !item.isNew);
+      const shuffledDummy = shuffleArray(dummyData);
+      
+      // 신규 데이터 + 섞인 더미데이터
+      sellersData = [...newSellersListings, ...shuffledDummy];
+
+      let container, loading;
+      let currentPage = 0;
+      const itemsPerPage = 9;
+      let isLoading = false;
+
+      function createItemHTML(item, index) {
+        // 매도 상태 비율에 맞게 배분 (마감됨 30%, 매도대기 10%, 매도중 60%)
+        let status, statusClass;
+        const remainder = index % 10;
+        if (remainder < 3) {
+          // 30%: 마감됨
+          status = '마감됨';
+          statusClass = 'status-closed';
+        } else if (remainder < 4) {
+          // 10%: 매도대기
+          status = '매도대기';
+          statusClass = 'status-waiting';
+        } else {
+          // 60%: 매도중
+          status = '매도중';
+          statusClass = 'status-matching';
+        }
+        
+        return `
+          <a href="#" class="list-item" data-item-id="${item.id}" data-item-index="${index}" ${item.isNew ? 'style="border: 2px solid #4db7ff;"' : ''}>
+            <div class="item-header">
+              <span class="item-id">${item.category}</span>
+              <span class="item-category ${statusClass}">${status}${item.isNew ? ' <span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; margin-left: 5px;">NEW</span>' : ''}</span>
+            </div>
+            <div class="item-title">${item.name}</div>
+            <div class="item-info-grid">
+              <div class="info-item">
+                <span class="info-label">업종</span>
+                <span class="info-value">${item.category}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">기업형태</span>
+                <span class="info-value">${item.type}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">희망매도액</span>
+                <span class="info-value">${item.priceRange}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">자본금</span>
+                <span class="info-value">${item.capital}</span>
+              </div>
+            </div>
+          </a>
+        `;
+      }
+
+      function loadItems() {
+        if (isLoading) {
+          console.log('Already loading...');
+          return;
+        }
+        if (!container || !loading) {
+          console.error('Container or loading element not found in loadItems');
+          return;
+        }
+        
+        console.log('Loading items...', { currentPage, itemsPerPage, totalItems: sellersData.length });
+        isLoading = true;
+        loading.classList.add('active');
+
+        setTimeout(() => {
+          const start = currentPage * itemsPerPage;
+          const end = start + itemsPerPage;
+          const itemsToShow = sellersData.slice(start, end);
+
+          console.log('Items to show:', itemsToShow.length);
+
+          itemsToShow.forEach((item, localIndex) => {
+            const globalIndex = start + localIndex;
+            container.insertAdjacentHTML('beforeend', createItemHTML(item, globalIndex));
+          });
+
+          currentPage++;
+          isLoading = false;
+          loading.classList.remove('active');
+
+          console.log('Items loaded. Current page:', currentPage);
+
+          if (end >= sellersData.length) {
+            console.log('All items loaded');
+            return;
+          }
+        }, 500);
+      }
+
+      // Infinite scroll
+      let scrollTimeout;
+      function handleScroll() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        const documentHeight = Math.max(
+          document.body.scrollHeight,
+          document.body.offsetHeight,
+          document.documentElement.clientHeight,
+          document.documentElement.scrollHeight,
+          document.documentElement.offsetHeight
+        );
+        
+        // 스크롤이 하단 500px 이내에 도달하면 다음 페이지 로드
+        if (scrollTop + windowHeight >= documentHeight - 500) {
+          if (currentPage * itemsPerPage < sellersData.length && !isLoading) {
+            loadItems();
+          }
+        }
+      }
+
+      window.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(handleScroll, 100);
+      }, { passive: true });
+
+      // 초기 로드 후에도 스크롤 가능하도록 확인
+      window.addEventListener('load', () => {
+        handleScroll();
+      });
+
+      // Back button handling
+      const urlParams = new URLSearchParams(window.location.search);
+      const fromSection = urlParams.get('from');
+      
+      // 히스토리 상태 저장
+      if (fromSection) {
+        history.replaceState({ from: 'index', section: fromSection }, '', window.location.href);
+      }
+
+      // 브라우저 뒤로가기 처리
+      window.addEventListener('popstate', (e) => {
+        if (e.state && e.state.from === 'index' && e.state.section) {
+          window.location.href = `../index.html#s${e.state.section}`;
+        } else if (fromSection) {
+          window.location.href = `../index.html#s${fromSection}`;
+        }
+      });
+
+      // DOM이 준비된 후 실행
+      function initializePage() {
+        container = document.getElementById('listContainer');
+        loading = document.getElementById('loading');
+        
+        if (!container || !loading) {
+          console.error('DOM elements not found. Retrying...');
+          setTimeout(initializePage, 100);
+          return;
+        }
+
+        console.log('DOM elements found, initializing...');
+
+        // 이벤트 위임: 컨테이너에 클릭 이벤트 한 번만 등록
+        container.addEventListener('click', function(e) {
+          const listItem = e.target.closest('.list-item');
+          if (listItem) {
+            e.preventDefault();
+            const itemId = listItem.getAttribute('data-item-id');
+            const itemIndex = parseInt(listItem.getAttribute('data-item-index'));
+            const itemData = sellersData.find(d => d.id === itemId);
+            if (itemData) {
+              showCompanyDetail(itemData, itemIndex);
+            }
+          }
+        });
+
+        // Initial load
+        console.log('Calling loadItems...');
+        loadItems();
+      }
+
+      // window.onload로 확실하게 실행
+      if (window.addEventListener) {
+        window.addEventListener('load', function() {
+          setTimeout(initializePage, 100);
+        });
+      } else {
+        window.onload = function() {
+          setTimeout(initializePage, 100);
+        };
+      }
+
+      // 현재 모달에 표시된 기업 정보 저장
+      let currentCompanyInfo = null;
+
+      // 모달 관련 함수
+      function showCompanyDetail(item, index) {
+        currentCompanyInfo = item;
+        // 상태 계산
+        let status, statusClass;
+        const remainder = index % 10;
+        if (remainder < 3) {
+          status = '마감됨';
+          statusClass = 'status-closed';
+        } else if (remainder < 4) {
+          status = '매도대기';
+          statusClass = 'status-waiting';
+        } else {
+          status = '매도중';
+          statusClass = 'status-matching';
+        }
+
+        // 모달 내용 생성
+        const modal = document.getElementById('companyModal');
+        const modalContent = modal.querySelector('.modal-content');
+        
+        modalContent.innerHTML = `
+          <div class="modal-header">
+            <div class="modal-title-section">
+              <div class="modal-company-id">${item.id}</div>
+              <div class="modal-company-name">${item.name}</div>
+              <span class="modal-status ${statusClass}">${status}</span>
+            </div>
+            <button class="modal-close" onclick="closeCompanyModal()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="modal-info-section">
+              <div class="modal-info-title">기본 정보</div>
+              <div class="modal-info-grid">
+                <div class="modal-info-item">
+                  <span class="modal-info-label">업종</span>
+                  <span class="modal-info-value">${item.category}</span>
+                </div>
+                <div class="modal-info-item">
+                  <span class="modal-info-label">기업형태</span>
+                  <span class="modal-info-value">${item.type}</span>
+                </div>
+                <div class="modal-info-item">
+                  <span class="modal-info-label">희망 매도액</span>
+                  <span class="modal-info-value">${item.priceRange}</span>
+                </div>
+                <div class="modal-info-item">
+                  <span class="modal-info-label">자본금</span>
+                  <span class="modal-info-value">${item.capital}</span>
+                </div>
+              </div>
+            </div>
+            <div class="modal-info-section">
+              <div class="modal-info-title">상세 설명</div>
+              <div class="modal-description">
+                ${item.name}은(는) ${item.category} 분야에서 활동하는 ${item.type}입니다. 
+                매각을 고려하고 있으며, 희망 매도액은 ${item.priceRange} 범위로 설정되어 있습니다. 
+                자본금은 ${item.capital}이며, 안정적인 사업 기반과 성장 가능성을 보유하고 있습니다. 
+                전략적 인수자와의 협상을 통해 상호 성장할 수 있는 기회를 찾고 있습니다.
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="modal-btn modal-btn-secondary" onclick="closeCompanyModal()">닫기</button>
+            <button class="modal-btn modal-btn-primary" onclick="contactCompany('${item.id}')">상담 신청</button>
+          </div>
+        `;
+
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeCompanyModal() {
+        const modal = document.getElementById('companyModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      // 현재 모달에 표시된 기업 정보 저장
+      let currentCompanyInfo = null;
+
+      function contactCompany(companyId) {
+        // 현재 모달에 표시된 기업 정보 가져오기
+        const itemData = sellersData.find(d => d.id === companyId);
+        if (!itemData) return;
+
+        currentCompanyInfo = itemData;
+
+        // 로그인 상태 확인
+        const currentUser = JSON.parse(localStorage.getItem('mna_station_current_user') || 'null');
+        const isLoggedIn = !!currentUser;
+
+        if (!isLoggedIn) {
+          // 로그인 안내 모달 표시
+          showLoginRequiredModal();
+        } else {
+          // 로그인되어 있으면 상담 신청 처리
+          submitConsultationRequest(currentUser, itemData, 'seller');
+        }
+      }
+
+      function showLoginRequiredModal() {
+        const loginModal = document.getElementById('loginRequiredModal');
+        loginModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLoginRequiredModal() {
+        const loginModal = document.getElementById('loginRequiredModal');
+        loginModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function goToLogin() {
+        closeLoginRequiredModal();
+        closeCompanyModal();
+        window.location.href = '../account/login.html';
+      }
+
+      function submitConsultationRequest(user, companyInfo, type) {
+        // 상담 신청 데이터 생성
+        const consultationData = {
+          id: 'CONS-' + Date.now(),
+          userId: user.id || user.email,
+          userName: user.name || user.email,
+          userEmail: user.email,
+          companyId: companyInfo.id,
+          companyName: companyInfo.name,
+          companyType: companyInfo.type,
+          companyCategory: companyInfo.category,
+          priceRange: companyInfo.priceRange,
+          capital: companyInfo.capital,
+          consultationType: type, // 'buyer' or 'seller'
+          status: '대기중',
+          createdAt: new Date().toISOString(),
+          page: 'sellers' // 또는 'buyers'
+        };
+
+        // LocalStorage에 저장
+        const consultations = JSON.parse(localStorage.getItem('mna_station_consultations') || '[]');
+        consultations.push(consultationData);
+        localStorage.setItem('mna_station_consultations', JSON.stringify(consultations));
+
+        // 성공 메시지
+        alert(`${companyInfo.name}에 대한 상담 신청이 완료되었습니다.`);
+        closeCompanyModal();
+      }
+
+      // 모달 외부 클릭 시 닫기
+      document.addEventListener('click', function(e) {
+        const companyModal = document.getElementById('companyModal');
+        const loginModal = document.getElementById('loginRequiredModal');
+        if (e.target === companyModal) {
+          closeCompanyModal();
+        }
+        if (e.target === loginModal) {
+          closeLoginRequiredModal();
+        }
+      });
+
+      // ESC 키로 모달 닫기
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          const loginModal = document.getElementById('loginRequiredModal');
+          if (loginModal && loginModal.classList.contains('active')) {
+            closeLoginRequiredModal();
+          } else {
+            closeCompanyModal();
+          }
+        }
+      });
+
+      // ⚠️ 중요: 햄버거 메뉴는 menu.js에서 처리됩니다
+    </script>
+    
+    <!-- 햄버거 메뉴 공통 모듈 -->
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/menu.js"></script>
+    
+    <!-- 기업 상세 정보 모달 -->
+    <div id="companyModal" class="company-modal">
+      <div class="modal-content">
+        <!-- 동적으로 생성됨 -->
+      </div>
+    </div>
+
+    <!-- 로그인 안내 모달 -->
+    <div id="loginRequiredModal" class="company-modal">
+      <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+          <div class="modal-title-section">
+            <div class="modal-company-name">로그인이 필요합니다</div>
+          </div>
+          <button class="modal-close" onclick="closeLoginRequiredModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div style="text-align: center; padding: var(--spacing-lg) 0;">
+            <p style="font-size: var(--font-size-base); color: var(--text-primary); line-height: 1.6; margin-bottom: var(--spacing-lg);">
+              상담 신청은 로그인 후 이용하실 수 있습니다.<br>
+              로그인 페이지로 이동하시겠습니까?
+            </p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn modal-btn-secondary" onclick="closeLoginRequiredModal()">취소</button>
+          <button class="modal-btn modal-btn-primary" onclick="goToLogin()">로그인 페이지로 이동</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⚠️ 중요: 하단탭 시작 - 삭제하지 마세요! -->
+    <nav class="bottom-tabs">
+      <div class="tab-item" data-index="0" onclick="window.location.href='../index.html'">
+        <div class="icon">🏠</div>
+        <div class="label">홈</div>
+      </div>
+      <div class="tab-item active" data-index="1" onclick="window.location.href='sellers.html'">
+        <div class="icon">📝</div>
+        <div class="label">등록</div>
+      </div>
+      <div class="tab-item" data-index="3" onclick="window.location.href='../insights/cases.html'">
+        <div class="icon">📊</div>
+        <div class="label">인사이트</div>
+      </div>
+      <div class="tab-item" data-index="4" onclick="window.location.href='../support/consult.html'">
+        <div class="icon">💬</div>
+        <div class="label">상담</div>
+      </div>
+      <div class="tab-item" data-index="5" onclick="window.location.href='../account/mypage.html'">
+        <div class="icon">👤</div>
+        <div class="label">마이페이지</div>
+      </div>
+    </nav>
+    <!-- ⚠️ 중요: 하단탭 끝 -->
+  </body>
+</html>
